@@ -60,6 +60,9 @@ def _env() -> Environment:
     return env
 
 
+REPO_BLOB = "https://github.com/gcicc/claude-trends/blob/main/"
+
+
 def load_index(path: Path) -> list[dict]:
     """Parse the rolling report index into run-history rows, newest first."""
     rows = []
@@ -72,7 +75,9 @@ def load_index(path: Path) -> list[dict]:
             {
                 "date": date,
                 "label": label,
-                "href": link if link.startswith("../") else f"../reports/{link}",
+                # Pages serves only docs/, so reports and run JSON link to the
+                # repo, where GitHub renders Markdown. Resolves once pushed.
+                "href": REPO_BLOB + (link[3:] if link.startswith("../") else f"reports/{link}"),
                 "summary": summary,
                 "legacy": link.startswith("legacy/"),
             }

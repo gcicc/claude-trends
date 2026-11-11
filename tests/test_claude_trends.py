@@ -168,4 +168,7 @@ def test_index_parser_marks_legacy_and_sorts():
     dates = [r["date"] for r in rows]
     assert dates == sorted(dates, reverse=True)
     assert any(r["legacy"] for r in rows)
-    assert rows[0]["href"] == "../reports/claude-trends-2026-10-29-delta.md"
+    assert (
+        rows[0]["href"]
+        == "https://github.com/gcicc/claude-trends/blob/main/reports/claude-trends-2026-10-29-delta.md"
+    )
