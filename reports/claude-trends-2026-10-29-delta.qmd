@@ -1,0 +1,195 @@
+---
+title: "Claude Trends — Delta Report 2026-10-29"
+date: 2026-10-29
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    embed-resources: true
+---
+
+
+*Baseline: 2026-09-29 (30-day default; no prior baseline report exists in this folder, so everything in the window is treated as new). Analyzed 8 videos (7 uploaded 2026-09-29 to 2026-10-28, plus djDt8J2_YVs, published 2026-09-26, three days before the window and included deliberately), plus Anthropic primary sources (newsroom, API release notes, Claude Code changelog v2.1.285–v2.1.312, read in full).*
+
+**Evidence labels used throughout.** `P` = Anthropic primary file (newsroom.md, api-release-notes.md, cc-changelog.md). `OV` = official-channel video, human captions. `SV-h` = staff talk, human captions. `SV-a` = staff talk, auto-captioned (D-SVFneJ_Nk, AnsXWH2_EBU, ZkDRXs_LvWw): content is reliable, exact wording is not, so I paraphrase. `M` = description-only metadata for a short upload. `GD` = Grok-comparison tier (stated in that section).
+
+## Executive Summary
+- **Claude Haiku 5.5 launched 2026-10-07** (`claude-haiku-5-5`): 1M context, $0.10 in / $0.50 out per MTok for prompts of 100K tokens or less, $0.50 / $2.50 above; it is now the default `haiku` alias in Claude Code (v2.1.293). Sonnet 5.5 cache reads were cut from $0.20 to $0.10 the same day. [P: newsroom.md, api-release-notes.md, cc-changelog.md]
+- **Anthropic is pushing always-on, multi-agent surfaces**: Claude Tag (Slack), Claude Code Projects (beta, Pro/Max), cloud sessions, Managed Agents dynamic workflows (beta, 10-09) and Claude Duet (research preview, waitlist). Cherny describes Tag and Projects as the bets that may eventually replace Claude Code itself. [P; _f_rtbW_uFM, omihvjf0A2k OV; djDt8J2_YVs SV-h]
+- **Claude Code gained Mods (v2.1.287, 2026-10-01)**, plugins that change rendering, prompts and tool calls, alongside idle compaction, default-on fork subagents, review levels (Quick/Standard/Deep) for the GitHub Code Review service (v2.1.304; org-level, PR-based, distinct from the local `/code-review` command) and a cluster of Windows PowerShell hook fixes. [P: cc-changelog.md; yUuFvL1lK4k OV]
+- **Platform and ecosystem**: API version 2026-10-21 with major-version SDKs (Apache 2.0), Agent Skills donated to the Agentic AI Foundation (10-22), Sonnet 4.5 retirement set for 2026-11-30, and an S-1 filing (10-26). [P: api-release-notes.md, newsroom.md]
+- **Grok comparison (first run)**: the only clean independent head-to-head is LMArena WebDev (2026-10-27, models only), Claude Opus 5.5 1810 vs Grok 4.7 1637. Grok Bot is a different product category from Claude Code and has no independent benchmark. [GD]
+
+## NEW Features / Releases
+
+**Models**
+- Haiku 5.5: first Haiku-class model with an effort parameter; 128k max output; adaptive thinking on by default; on Claude API, Bedrock, Claude Platform on AWS, Google Cloud, Microsoft Foundry. Breaking changes vs Haiku 4.5 return 400s: manual `budget_tokens`, `temperature`/`top_p`/`top_k`, assistant prefill, `computer_20250124`. [P: api-release-notes.md 10-07]
+- Opus 5.5 fast mode left research preview 2026-10-15 (no access request; header optional); also on Microsoft Foundry. The "(research preview)" label was removed from `/fast` in v2.1.304. [P]
+- Sonnet 4.5 (`claude-sonnet-4-5-20250929`) deprecated; retirement on Claude API 2026-11-30. [P: api-release-notes.md 09-30]
+- No Opus, Sonnet or Fable launch posts in the window. [P: newsroom.md]
+
+**Claude Code CLI (v2.1.285–v2.1.312; 26 versions, the file contains no 2.1.297 or 2.1.298)**
+- Mods (v2.1.287): a mod is a plugin whose `hook.json` gains a `modules` key pointing at a TypeScript file that registers functions on internal events (render, tool call, permission check, prompt), Express-middleware style; the demo hides email addresses on screen until hover. [P; yUuFvL1lK4k OV]
+- Built-in "You should know" mod, a side agent that flags what you or Claude may miss (v2.1.287, first-party sessions with telemetry on). [P]
+- Idle compaction (v2.1.299): a 200K+ token conversation idle about 54 minutes is compacted before the one-hour prompt cache expires; `"idleCompaction": false` turns it off. [P]
+- Fork subagents on by default in `claude -p`, Agent SDK, desktop app and VS Code (v2.1.302); Agent tool gets an `effort` parameter (v2.1.292); subagent `autoCompactWindow` (v2.1.296). [P]
+- Auto mode: `/auto-mode-setup` (v2.1.304), `CLAUDE_CODE_AUTO_MODE_MODEL` (v2.1.302). Hooks: `onFailure: "block"` (v2.1.295). `ultrathink` now runs its turn at xhigh effort (v2.1.311). [P]
+- Code Review: Quick / Standard (default) / Deep levels (v2.1.304); `@claude review stop` (v2.1.307). [P]
+- Windows, relevant to this machine: PowerShell hooks now block on exit code 2 and fail closed when Git for Windows is missing (v2.1.299, v2.1.309, v2.1.310); git commands faster (v2.1.309, v2.1.304); exFAT/FAT32 write refusals fixed (v2.1.302); PowerShell tool finds plugin `bin/` commands (v2.1.302); stdio MCP servers shut down gracefully (v2.1.296). [P]
+
+**Skills, plugins, MCP**
+- Agent Skills open standard donated to the Agentic AI Foundation 2026-10-22; the newsroom index says more than 70 platforms adopted it (index summary only; the post itself was not fetched). [P: newsroom.md]
+- MCP protocol version 2026-07-28 is negotiated by default for stdio servers (v2.1.292) and claude.ai connectors (v2.1.295); `MCP_PROTOCOL_NEGOTIATION=legacy` opts out. [P]
+
+**Routines, cloud sessions, Projects**
+- Claude Code Projects: one conversation coordinates threads, each a full session on its own branch in the cloud; threads watch PRs and fix CI; daily routine checks; beta, rolling out to Pro and Max. [OV: omihvjf0A2k]
+- Cloud sessions: own VM, continue while you are away, start from phone; count toward plan limits with no separate compute charge. [M: nJMwXtD56mA]
+- Cloud routines get an effort picker (v2.1.312); cloud sessions and Remote Control can be gated by Enterprise custom roles (v2.1.310). [P]
+
+**Claude Tag (Slack)**
+- Claude in a team channel: remembers channel instructions, works from its own accounts, logs every change, asks permission before acting on your behalf; Team and Enterprise. [OV: _f_rtbW_uFM]
+- Changelog adds Slack Connect channels (off by default), Allow once/Deny cards, `!fast`, analytics and spend limits; API beta for Tag settings 2026-10-23. [P]
+
+**Desktop and apps (descriptions only)**
+- Chat and Cowork merged into one Claude; Docs, Slides, Design out of beta on all plans including Free (10-19); Dashboards (beta, paid plans) and Motion (beta, Team/Enterprise); Claude Duet (see Grok section B). [M: n9WfoNW2XnE, _Ui4ZkYm4ho, Fb-68zqcSVs]
+
+**API and platform [P: api-release-notes.md]**
+- API version 2026-10-21; SDK majors Python 2.0.0, TypeScript 1.0.0, Go 2.0.0, Java 3.0.0, C# 13.0.0, PHP 1.0.0, Ruby 2.0.0, ant CLI 2.0.0; breaking changes independent of API version; licence Apache 2.0 instead of MIT.
+- Managed Agents: dynamic workflows (beta, `managed-agents-2026-04-01`, 10-09); scheduled deployments on Claude Platform on AWS (10-14); `web_fetch` limited to URLs already in session context (10-07, anti-exfiltration); org-level web fetch off switch (10-20).
+- User profiles (`/v1/user_profiles`) for per-customer enforcement; OpenTelemetry export beta (10-14); Admin API out of beta (09-30); Claude Models on Google Cloud (10-22); Max and Team plans now include monthly API credits (10-07).
+
+## NEW Workflow Patterns
+- **Adversarial review, then a judge.** Spin off several Claude threads whose only task is to prove the work wrong, then use another Claude to validate the criticisms; prefer hard outside evidence, because "the current session" is a poor judge of its own work. Rieseberg describes running it in Projects with five threads. [D-SVFneJ_Nk SV-a]
+- **Verification evidence on every PR.** Claude does a first-pass review that exercises the change like a user (browser, end-to-end, linting); edit hooks study diffs; team taste lives in CLAUDE.md/AGENTS.md; humans check the agent's evidence (screenshots, video). [AnsXWH2_EBU SV-a, Osmani]
+- **Give Claude raw data and tools, not curated slices**, and document tools well; "model experience" as a design test. Rieseberg's own caution: upfront setup cost is real. [D-SVFneJ_Nk SV-a]
+- **Be sparing with skills.** Rieseberg says Anthropic's official guidance is to be careful because a skill's usefulness decays fast, and removing a skill can improve output; most useful where you have an eval. [D-SVFneJ_Nk SV-a]
+- **Projects economics:** coordinator on low effort, threads on a smaller model, switch up for hard tasks; Projects burn plan limits faster than one session. [omihvjf0A2k OV]
+- **Sandbox plus auto mode instead of yes/no prompts.** Cherny: prompts became "security theater"; a second model without conversation context judges each command. The sandbox is opt-in in Claude Code and on by default in Cowork. [djDt8J2_YVs SV-h]
+- **One shared company agent in Slack** instead of one agent per person, built on Managed Agents (sandboxes, memory, session control); agent acts as a separate entity but on the requester's behalf for tool calls. Guests are Every staff, not Anthropic. [z7cNbsr3b5s OV]
+
+## NEW Tools / MCPs / Integrations
+- Claude-native: Claude Tag, Mods, Claude Code Projects, Claude Duet, Claude for Google Workspace (details not fetched) [M: idJQMJwHtyM], Claude in Chrome (many v2.1.2xx fixes) [P].
+- Adjacent: Every Agent (Slack agent on Managed Agents) [z7cNbsr3b5s]; Sonar verification layers [AnsXWH2_EBU]; Stripe Link, cited by Krieger as a model for agent purchase approvals, not an integration [ZkDRXs_LvWw SV-a].
+- Not counted: Dig AI is a sponsor read inside D-SVFneJ_Nk. "Muse" and "Instinct" and a "model hardware standard" are named by Krieger; none appears in the primary files, and the spellings are caption-uncertain.
+
+## NEW on GitHub
+Window: repos created on or after 2026-09-15; 7 queries; 235 unique repos; shortlist 8. READMEs skimmed, nothing installed. [github/shortlist.md]
+
+| Repo | Stars | Age (d) | Licence | What it does | Windows? | What leaves the machine | Overlap | Verdict |
+|---|---|---|---|---|---|---|---|---|
+| tamaratran/fast-jev-compaction | 7,795 | 41 | MIT | Pre-compact plugin using TypeSafe "Jev" API | Node plugin, untested | Full transcript to TypeSafe; `TYPESAFE_API_KEY` | pre-compact.sh | watch |
+| dzhng/jevgrep | 3,062 | 32 | MIT | Code search | Yes (Node 22+) | Code snippets; Vercel/TypeSafe/OpenRouter key | none | skip |
+| yetone/magpie | 25,219 | 35 | MIT | Local gateway routing to other providers, account rotation on quota | Yes | Traffic routed to other providers | none | watch (ToS risk) |
+| QingYunA/answer-me-with-html | 4,636 | 26 | MIT | Skill returning offline HTML answers | Skill, likely | None stated | Artifact tooling | try |
+| t3dotgg/tstack | 2,339 | 4 | MIT | Skill pack; council skill calls 3 other providers | Skills | Prompts to 3 providers | code-reviewer agent | watch (4 days old) |
+| MaryCache/imozuru | 1,368 | 15 | MIT | Citation-chasing research skill (JP-first, README.en exists) | Yes (PowerShell documented) | Web search, PDFs | youtube-research cmd | try |
+| ruc-datalab/EvoOntology | 1,090 | 43 | MIT | Data-agent research MCP (arXiv 2609.15779) | Unknown | MCP traffic | duckdb MCP | watch |
+| YeonwooSung/my-claude-code-mods | 1,099 | 19 | Apache-2.0 | Context-inspector and agent-profiler mods | Unknown | OTLP only if configured | cost-tracker.sh | try |
+
+Anomalies [github/shortlist.md]:
+- Star counts are unreliable: Gathin23/cleanyourtv 44,803 stars at 11 days (licence "other"), magpie 25k at 35 days, lemo-opuscar 9.3k, universal-modder 9.2k. Likely inflation or promotion.
+- Claude-Guardian (1,265 stars, GPL-3, ban-evasion text) and Folkbench (API relay ranking): skip.
+- Jakeschincariol owns 6 of the top 40 (identical 11-skill packs): serial-publisher pattern.
+- The "Jev"/TypeSafe cluster (fast-jev-compaction, jevgrep, hermes-jev-skills) looks like coordinated promotion of one vendor.
+
+## Notable Applications
+- Cherny: 12-hour data-analysis sessions launching about 10 parallel agents; a Cowork run that obtained a clamming licence in about 30 minutes. [djDt8J2_YVs SV-h]
+- Krieger's Labs "Hatch" (builder plus adversarial verifier agents, months of harnessing) was outperformed by Fable 5.1 with only dynamic workflows. His point: hold product shapes lightly. [ZkDRXs_LvWw SV-a]
+- Every's "Kate pass": a skill built from 30,000 historical edits, applied as suggested edits in Google Docs. [z7cNbsr3b5s OV]
+- The AnsXWH2_EBU title cites 30,000 merges a day at Anthropic, attributed to an Anthropic post that is not in the newsroom list. Unverified. [SV-a]
+
+## Pricing / Cost shifts
+| Item | Change | Source |
+|---|---|---|
+| Haiku 5.5 | $0.10 in / $0.50 out per MTok (prompts ≤100K); $0.50 / $2.50 above; cache read $0.01 / $0.05, write $0.125 / $0.625; vs Haiku 4.5 $1 / $5 and Sonnet 5.5 $2 / $10 | P: newsroom.md |
+| Sonnet 5.5 cache read | $0.20 to $0.10 per MTok (Claude Code `/cost` updated, v2.1.296) | P: api-release-notes.md, cc-changelog.md |
+| Opus 5.5 fast mode | Out of research preview; $8 / $40 per MTok | P: api-release-notes.md; price from grok/vendor.md (vendor summary of claude.com/pricing) |
+| Limits | Usage messages renamed "5-hour limit" (v2.1.312); resume warning on Pro/Max when a stale conversation would use a noticeable share of the 5-hour limit (v2.1.304); standard-context sessions that exceed 200K tokens now compact instead of stopping on "Usage credits required for 1M context" (v2.1.311) | P |
+
+Cherny says Opus 5.5 efficiency allowed price cuts and higher Pro/Max limits [djDt8J2_YVs SV-h]; no primary file in this sweep shows an Opus price change, so that is unconfirmed here.
+
+## Consensus shifts (vs 2026-09-29)
+n/a: no prior baseline report.
+
+## Contradictions vs baseline
+n/a: no prior baseline report. Within-window contradictions between sources:
+- **Auto mode default.** Krieger says every Claude Code session runs through the auto-mode classifier by default [ZkDRXs_LvWw SV-a]. The changelog says sessions with no permission mode start in `default` on third-party providers, telemetry-off or fresh installs (v2.1.302), reversing v2.1.285. Primary source wins: treat "on by default everywhere" as wrong, or at best true for some plans.
+- **Prompt injection.** Cherny states the Claude Code prompt-injection success rate is "zero" because none could be demonstrated in a one-week bounty [djDt8J2_YVs SV-h]. Staff claim, no primary support in these files; the same sentence concedes vulnerabilities "probably still exist".
+- **Captions.** "Opus 55" in the auto-captions is read as Opus 5.5; speaker surnames are garbled.
+
+## Grok vs Claude Code
+"Grok bot" currently means: **Grok Bot**, an always-on agent product (beta since 2026-08-11; `@bot` on X), per x.ai/news/introducing-grok-bot and docs.x.ai/grok-bot/overview. X users also lump in **Grok Build** (agent CLI, early beta 2026-05-25, open-sourced 2026-07-15), the **Grok 4.7** model (2026-09-21), and Cursor-hosted use (Cursor is reported to be part of xAI's parent; deal terms unverified). No xAI-owned IDE found. [grok/vendor.md, GD tier 1]
+
+**Reported and unverified, not stated as fact:** (1) xAI pages and staff now call the company "SpaceXSI"/"SpaceXAI". The files record that wording in an x.ai guide and footer, but the fetches were summarised by a small model, so I use "xAI". (2) Grok Bot routes tasks to Claude Opus 5.5 (a Musk post about 2026-10-07, secondary reports only; xAI docs do not confirm).
+
+Tier key: vendor, affiliated, **independent**, sentiment. Fetches were summarised by a small model; every number below was checked against the file text.
+
+### A. Grok Build vs Claude Code (coding CLI and agent)
+
+| Dimension | Claude Code | Grok Build | Tier | Source + date |
+|---|---|---|---|---|
+| Agent product and surfaces | Terminal CLI, VS Code, JetBrains, Desktop, Web, Slack | Terminal TUI, headless `-p`, ACP editors; "1.0" Aug 2026 per third-party only | vendor | code.claude.com overview; x.ai/news/grok-build-cli, docs.x.ai/build/overview; 2026-10-29 |
+| Current models | Fable 5.1; Opus 5.5 (09-22); Sonnet 5.5 (09-28); Haiku 5.5 (10-07) | Grok 4.7 (09-21); grok-build-0.1 (256k, May); Fast variant only in Cursor and Build | vendor | anthropic.com/news; docs.x.ai release notes |
+| Coding benchmarks | **WebDev Arena (models only, no harness):** Opus 5.5 (Max) 1810 rank 1; Sonnet 5.5 (xHigh) 1770 rank 3. **Terminal-Bench 4.0 (mirror, unverified):** Opus 5.5 + Claude Code, max, 64.8% (as of 10-17). **Artificial Analysis:** Opus 5.5 (Max) Index 58 | **WebDev Arena:** Grok 4.7 (xHigh) 1637 rank 21. **Terminal-Bench 4.0 (mirror, unverified):** Grok 4.7 + Grok Build, xhigh, 37.58% (board date 09-21). **Artificial Analysis:** Grok 4.7 (xhigh) Index 34 (a relay says 46: unresolved) | **independent** | arena.ai/leaderboard/webdev "Last updated Oct 27, 2026"; tbench.ai returned no rows; Presenc.ai, DevelopersDigest; artificialanalysis.ai (no page dates) |
+| Price | API $/MTok in/out: Fable 5.1 10/50; Opus 5.5 4/20; Sonnet 5.5 2/10; Haiku 5.5 0.10/0.50 (≤100K). Pro $20/mo; Max from $100; no numeric limits published | Grok 4.7 2/6 (below 200K prompt; cached 0.50), 4/12 above; grok-build-0.1 1/2. SuperGrok about $30/mo and Heavy $300/mo (third-party, not confirmed on an xAI page). Rate limits: no numbers found | vendor | claude.com/pricing; docs.x.ai/docs/models; 2026-10-29 |
+| Context window | 1M for Haiku 5.5 (API notes); Opus 4.7+/Sonnet 5+/Fable use 1M by default behind gateways and on Bedrock/Vertex/Foundry (v2.1.285, v2.1.287); Anthropic-API default not stated in the files | Grok 4.7 500k; grok-build-0.1 256k; 4.3 and 4.20 variants 1M | vendor | api-release-notes.md, cc-changelog.md; docs.x.ai |
+| Agent features | Subagents, skills, hooks, MCP, mods, Agent SDK, `/schedule`, `/loop`; reads AGENTS.md | AGENTS.md, plugins, hooks, skills, MCP, plan mode, parallel-worktree subagents. Scheduling: not found. Reads CLAUDE.md: not confirmed | vendor | as above |
+| Windows | Native PowerShell/CMD installers, WinGet; Git for Windows recommended; Desktop x64 and ARM64; Windows hook fixes in this window | Native PowerShell installer (`irm https://x.ai/cli/install.ps1 \| iex`), `%USERPROFILE%\.grok\config.toml` | vendor | code.claude.com; docs.x.ai/build/overview |
+| Data use and retention | Consumer: trains if setting on, 5-year retention, off = 30 days. Commercial: no training, 30 days, ZDR on request | xAI's own training and retention terms for Grok Build: not found | vendor | code.claude.com/docs/en/data-usage |
+| How insiders use it | Cherny: all surfaces, hundreds of agents a day typical, "all of our products are built using Claude Code" [SV-h]; Osmani: first-pass Claude review plus edit hooks [SV-a] | No Grok Build insider found; Lingxi Li's workflow centres on Bot and Cursor agents | affiliated | djDt8J2_YVs, AnsXWH2_EBU; x.ai/bot/guides (2026-09-10) |
+| What X is saying | Claude limit complaints | Grok Build weekly pool called generous by promoters (pre-window); some burned a SuperGrok week in 2-3 hours; hybrid "Claude plans, Grok CLI writes" (pre-window) | sentiment | WebSearch snippets; x.com fetches returned 403 |
+
+### B. Grok Bot vs Claude's always-on agent products
+
+Grok Bot has **no independent benchmark**; no performance ranking is offered. Rows are vendor descriptions unless marked.
+
+| Dimension | Grok Bot | Claude Tag | Cloud sessions / Projects / routines | Claude Duet | Managed Agents |
+|---|---|---|---|---|---|
+| What it is | Always-on "teammates" with a persistent cloud computer (browser, files, terminal), routines, Pages (2026-10-21, per Bot's X post) | Claude as a multiplayer teammate inside a Slack channel | Claude Code sessions on a cloud VM; Projects coordinates threads on branches | Phone app: Claude brings what needs attention, checks before acting for you | API for building your own agents (sandboxes, memory, sessions) |
+| Where it lives | Chat UI, desktop app (Windows x64/Arm64), `@bot` on X | Slack | Claude app/web/phone to cloud VM | Phone | Your product (e.g. Every Agent in Slack) |
+| Persistence and autonomy | Persistent machine; scheduled routines | Keeps working while you move on; Cherny: schedules its own check-ins (e.g. 12 h later) | Continues after the laptop closes; parallel threads; PR watching; daily routines | Keeps working after you put the phone down | Durable sessions and memory; dynamic workflows (beta 10-09); scheduled deployments (AWS) |
+| Acting on your behalf and approval | One shared machine, files and logins for all of an account's Bots; sentiment says "Always Allow" removes the approval gate | Acts from its own accounts, logs every change; asks permission each time it responds as you; Allow once/Deny cards | Plan limits apply; permission modes and auto mode as in Claude Code | "Checks before acting on your behalf" (description only) | Org web-fetch controls; per-customer user profiles; Every: acts as you for tool calls |
+| Plans, availability, pricing | SuperGrok/Plus/Heavy, Cursor Pro/Pro+/Ultra, Teams; Enterprise waitlist; docs conflict on whether usage is separate or a shared weekly pool | Team and Enterprise | Pro/Max/Team/Enterprise premium seats; Projects beta for Pro/Max; no separate compute charge | Research preview, waitlist, Pro/Max, US only | API usage; price not found in files |
+| Data and retention | Runs through Cursor's servers; Privacy Mode on = not used for training; deletion within 30 days after service end; Action Recording 90 days (Enterprise) | Not found | Claude Code terms above | Not found | Not found |
+| How insiders use it | Lingxi Li (SpaceXSI per page; 2026-09-10): five engineer Bots, 30-min loop over a Notion PR database, nightly audits, P0 transcript check every 5 min (token heavy). John Bai (design, 2026-08-24). Vendor-hosted, promotional, both pre-window | Krieger: Tag used "extensively" inside Anthropic, including a "decisions waiting" digest [SV-a]; Rieseberg recommends Tag as the team feedback agent [SV-a]; Cherny: first product merging coding and non-coding [SV-h] | Cherny: sessions across desktop, Slack, terminal, phone [SV-h] | Not found | Every (customer) [OV] |
+| Sentiment | Different category from Claude Code; enthusiasts say Bot replaces Claude Code; shared-machine trust concerns; limits dominate | Not collected | Not collected | Not collected | Not collected |
+
+**Changed since last run:** first comparison.
+**Vendor claims contradicted by independent sources:** None found. Unresolved vendor-versus-vendor gaps: Terminal-Bench 4.0 for Fable 5.1 is 57.9 in xAI's table but 55.8 in Anthropic's, and xAI's 57.9 equals the figure Anthropic gives GPT-6 Astra; Artificial Analysis Grok 4.7 Index 34 versus a relay's 46. Anthropic's 66.4% (xhigh) vs the 64.8% mirror (max) is within stated error; xAI's 37.6 vs the 37.58 board entry is consistent. CursorBench is not neutral for xAI because Cursor is reported to be part of its parent.
+**Bottom line for Greg's work:** On the one clean independent head-to-head (LMArena WebDev, 2026-10-27, models only) Claude Opus 5.5 leads Grok 4.7 by 173 points; Terminal-Bench points the same way but rests on mirrors, different harnesses and efforts, so I do not rank it. Both CLIs ship native Windows installers, but Claude Code has documented data terms and a run of Windows hook fixes in this window, while Grok Build's data terms were not found; Grok Bot is a general always-on work agent with no independent benchmark, and its nearest Claude equivalents (cloud sessions with routines, Tag, Duet) differ in tier and availability, so for solo local Python/R/.qmd work on Windows nothing in tier 1-2 evidence argues for switching from a local Claude Code session (inference).
+
+## Roster changes proposed
+| Name | Proposed change | Evidence |
+|---|---|---|
+| Felix Rieseberg | Update evidence to 2026-10-20; promote to `current` | D-SVFneJ_Nk (49 min, Silicon Valley Girl; states he leads engineering for Claude) |
+| Boris Cherny | Update evidence to 2026-09-26; `current` | djDt8J2_YVs (CHM Live; published before the window) |
+| Mike Krieger | Update evidence to 2026-10-06; `current` | ZkDRXs_LvWw (Sierra CXO Summit; Anthropic Labs) |
+| Addy Osmani | Update evidence to 2026-10-28; `current` | AnsXWH2_EBU (AI Engineer; says he recently joined Anthropic to own Claude Code developer experience). Passed speaker verification directly |
+| Katelyn Lesse (Head of Platform Engineering) | New candidate | z7cNbsr3b5s (name from the video description checked during verification; the transcript text does not name the host) |
+| Lydia (Mods video) | New candidate; surname needed | yUuFvL1lK4k; first name only |
+| Doug (Claude Docs video) | New candidate; surname needed | N9TUbGO6Kr4; "Doug (product engineer, Anthropic)" [M] |
+| Nate (designer, Claude Design video) | New candidate; surname needed | COJAZQM1aeQ; [M] |
+| Barry Zhang, Mahesh Murag; Alex Albert | No change: only re-clips of a December 2025 talk; a Vietnamese dub calls Albert a "research PM" (unverified) | search results |
+| Thariq Shihipar | Departed 2026-10-24 (already recorded) | n/a |
+
+## Sources
+| Video ID | Title | Channel | Speaker | Date | Strength |
+|---|---|---|---|---|---|
+| D-SVFneJ_Nk | Claude Engineering Lead: Stop Using Claude Like It's 2024 | Silicon Valley Girl | Felix Rieseberg | 2026-10-20 | Staff talk, auto-captioned |
+| AnsXWH2_EBU | How Anthropic Merges 30,000 Code Changes a Day | AI Engineer | Addy Osmani (with Manish Kapoor, Sonar) | 2026-10-28 | Staff talk, auto-captioned |
+| djDt8J2_YVs | CHM Live \| Anthropic's Boris Cherny, Creator of Claude Code | Computer History Museum | Boris Cherny | **2026-09-26 (before window)** | Staff talk, human captions |
+| ZkDRXs_LvWw | Sierra CXO Summit: Lessons Learned at the Frontier with Anthropic Labs' Mike Krieger | SIERRA Ventures | Mike Krieger | 2026-10-06 | Staff talk, auto-captioned |
+| omihvjf0A2k | Getting started with Claude Code Projects | Claude | Unnamed narrator | 2026-10-09 | Official channel (captions flagged auto-generated) |
+| z7cNbsr3b5s | Building secure agents for knowledge work | Claude | Katelyn Lesse (per description) with Every staff | 2026-10-06 | Official channel |
+| yUuFvL1lK4k | Mods in Claude Code: change how Claude Code works | Claude | Lydia (first name only) | 2026-10-05 | Official channel |
+| _f_rtbW_uFM | Getting started with Claude Tag | Claude | Unnamed narrator | 2026-09-29 | Official channel |
+
+Metadata only (under 3 minutes, descriptions only): N9TUbGO6Kr4, Fb-68zqcSVs, _Ui4ZkYm4ho, nJMwXtD56mA, n9WfoNW2XnE, iFHsEHP437U, COJAZQM1aeQ, NzcRprKWbD8 / bVXiNb9RyyI, idJQMJwHtyM. Excluded as not staff-speaking: N6FkmdL0Lg0 (Factory customer story), 9GtcbnmldcY (Shopify CTO).
+
+## Methodology
+- **Official channels (2.1):** Claude channel 22 uploads in window (about 15 unique after aspect-ratio duplicates); Anthropic channel 0 (latest 2026-09-23).
+- **Staff searches (2.2):** four batched roster searches (16 names, 65 results, about 500 quota units). 1 passed speaker verification directly (Addy Osmani); 3 originals were recovered by tracing commentary to its source (Rieseberg, Cherny, Krieger). About 61 dropped: commentary or reaction videos, re-clips of a December 2025 Zhang/Murag talk, Shorts, name collisions (Adam Wolff church services, an unrelated Alex Albert, Krieger Instagram-history videos). Search dates not recorded in the inputs.
+- **Filters:** videos under 3 minutes used as metadata only. Step 8 playlist skipped. Transcripts 8 of 8 downloaded, 3 auto-captioned; sponsor reads in D-SVFneJ_Nk ignored.
+- **Primary sources:** newsroom 19 posts (index summaries plus the Haiku 5.5 launch page); API release notes 15 dated headings, 37 bullets; changelog v2.1.285–v2.1.312 read in full (1,881 lines).
+- **GitHub:** window start 2026-09-15; 7 queries; 235 unique repos; shortlist 8.
+- **Grok:** xAI pages per grok/vendor.md (Bot overview/security/FAQ, grok-build-cli, grok-build-open-source, build overview, grok-4-7, models, release notes; x.ai/build/changelog returned 403). Leaderboards: LMArena WebDev (page dated 2026-10-27); tbench.ai returned no rows, so two mirrors (as of 10-01 and 10-17); Artificial Analysis (no page dates); swebench.com did not render. X pages returned 403; no login. Affiliated items: 2 counted (both SpaceXSI per page text, both pre-window), 5 not counted. Sentiment: 7 themes from search snippets, many pre-window. Number of searches not recorded. Fetches were summarised by a small model.
