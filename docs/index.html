@@ -1,0 +1,1748 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Trends — RANGE</title>
+<meta name="description" content="What changed in how people use Claude, from Anthropic primary sources, official channels and staff talks, graded by evidence tier. Run 2026-10-29.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>/* CLAUDE TRENDS — a strip rack for what changed in how Claude is used.
+ *
+ * Ported from HANGAR's design tokens and strip-rack styling (hangar/templates/styles.css).
+ * The coloured left edge of a strip carries evidence tier, not decoration:
+ *   green = Anthropic primary file or independent leaderboard
+ *   blue  = official-channel or staff video with human captions
+ *   gold  = auto-captioned staff talk or vendor claim
+ *   grey  = metadata only, affiliated or sentiment
+ *   red   = unverified
+ * STATE colours (go / hold / sodium) mean something about status; they are never
+ * reused as decoration.
+ */
+
+:root {
+  color-scheme: dark;
+
+  --ground: #101722;
+  --rack: #0b1017;
+  --strip: #18212e;
+  --strip-hot: #23303f;
+  --rule: #26313f;
+  --rule-bright: #3a4757;
+
+  --ink: #e9eef5;
+  --ink-2: #a3b0c0;
+  --ink-muted: #8d97a4;
+
+  --sodium: #ffa14a;
+  --go: #46d68a;
+  --hold: #ff6b60;
+  --hold-dim: #7d3129;
+
+  --series-1: #3987e5;
+  --t-optimus: #d9a441;
+  --t-money: #8792a8;
+
+  /* evidence tiers -> edge colour */
+  --e-strong: var(--go);
+  --e-video: var(--series-1);
+  --e-soft: var(--t-optimus);
+  --e-weak: var(--t-money);
+  --e-bad: var(--hold);
+
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --grid: rgba(120, 160, 205, 0.045);
+  --glow: rgba(255, 161, 74, 0.22);
+  --gutter: clamp(1rem, 3vw, 2.5rem);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --ground: #eceef2; --rack: #e2e5ea; --strip: #ffffff; --strip-hot: #fff6ec;
+    --rule: #ccd2db; --rule-bright: #a8b2c0;
+    --ink: #131922; --ink-2: #48525f; --ink-muted: #636b77;
+    --sodium: #b85c00; --go: #157a48; --hold: #c0392f; --hold-dim: #f3c9c5;
+    --series-1: #2a78d6; --t-optimus: #9a6b00; --t-money: #5f6b80;
+    --grid: rgba(20, 40, 70, 0.05); --glow: transparent;
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --ground: #eceef2; --rack: #e2e5ea; --strip: #ffffff; --strip-hot: #fff6ec;
+  --rule: #ccd2db; --rule-bright: #a8b2c0;
+  --ink: #131922; --ink-2: #48525f; --ink-muted: #636b77;
+  --sodium: #b85c00; --go: #157a48; --hold: #c0392f; --hold-dim: #f3c9c5;
+  --series-1: #2a78d6; --t-optimus: #9a6b00; --t-money: #5f6b80;
+  --grid: rgba(20, 40, 70, 0.05); --glow: transparent;
+}
+
+* { box-sizing: border-box; }
+
+html { overflow-x: hidden; }
+
+body {
+  margin: 0;
+  background-color: var(--ground);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
+}
+
+a { color: inherit; }
+code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  background: var(--rack);
+  border: 1px solid var(--rule);
+  padding: 0 0.25em;
+}
+
+/* ---------- masthead ---------------------------------------------------- */
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 1rem;
+  padding: 0.7rem var(--gutter);
+  border-bottom: 1px solid var(--rule);
+  background: var(--rack);
+}
+
+.bar h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px var(--glow);
+}
+
+.bar .sub {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.06em;
+}
+
+.bar nav { margin-left: auto; display: flex; flex-wrap: wrap; gap: 0.15rem; }
+
+.bar nav a {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  text-decoration: none;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid transparent;
+}
+
+.bar nav a:hover, .bar nav a:focus-visible, .bar nav a[aria-current] {
+  color: var(--ink);
+  border-color: var(--rule-bright);
+}
+
+/* ---------- source bus -------------------------------------------------- */
+
+.bus { display: flex; flex-wrap: wrap; gap: 0.3rem 0.8rem; margin-left: 0.6rem; }
+
+.bus span {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+.dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--go);
+  margin-right: 0.35rem;
+  vertical-align: 1px;
+  box-shadow: 0 0 6px var(--go);
+}
+.dot.failed { background: var(--hold); box-shadow: 0 0 6px var(--hold); }
+.dot.unchanged { background: var(--ink-muted); box-shadow: none; }
+
+/* ---------- layout ------------------------------------------------------ */
+
+main > section, .meta, footer > * {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+section { padding-top: 2rem; padding-bottom: 0.5rem; }
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.8rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.head h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.head .n, .head .stamp {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--ink-muted);
+}
+.head .stamp { margin-left: auto; }
+
+h3 {
+  margin: 1.2rem 0 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sodium);
+  font-weight: 500;
+}
+
+.note { color: var(--ink-2); font-size: 0.88rem; margin: 0.3rem 0 0.8rem; }
+
+/* ---------- run meta ---------------------------------------------------- */
+
+.meta {
+  padding-top: clamp(1.6rem, 5vw, 3.2rem);
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.meta .label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sodium);
+  margin-bottom: 0.5rem;
+}
+
+.meta .date {
+  font-family: var(--mono);
+  font-size: clamp(2rem, 8vw, 4.2rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.meta .headline { font-size: 1.05rem; margin: 0.9rem 0 0; max-width: 60ch; }
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  margin: 1rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+}
+.facts b { color: var(--ink); font-weight: 500; }
+
+/* ---------- strips ------------------------------------------------------ */
+
+.rack { display: flex; flex-direction: column; gap: 2px; }
+
+.strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.1rem 1rem;
+  align-items: baseline;
+  background: var(--strip);
+  border-left: 3px solid var(--e-weak);
+  padding: 0.6rem 0.9rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+a.strip:hover, a.strip:focus-visible {
+  background: var(--strip-hot);
+  border-left-color: var(--sodium);
+  outline: none;
+}
+
+.strip .what { font-size: 0.92rem; line-height: 1.4; }
+.strip .who {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  text-align: right;
+  max-width: 22rem;
+}
+.strip .who i { font-style: normal; display: block; }
+.strip.next { background: var(--strip-hot); border-left-color: var(--sodium); }
+
+.t-P, .t-independent { border-left-color: var(--e-strong); }
+.t-OV, .t-SV-h { border-left-color: var(--e-video); }
+.t-SV-a, .t-vendor { border-left-color: var(--e-soft); }
+.t-M, .t-affiliated, .t-sentiment { border-left-color: var(--e-weak); }
+.t-unverified { border-left-color: var(--e-bad); }
+
+.badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border: 1px solid var(--rule-bright);
+  padding: 0 0.35em;
+  margin-right: 0.4em;
+  vertical-align: 1px;
+}
+.badge.P, .badge.independent { color: var(--e-strong); border-color: var(--e-strong); }
+.badge.OV, .badge.SV-h { color: var(--e-video); border-color: var(--e-video); }
+.badge.SV-a, .badge.vendor { color: var(--e-soft); border-color: var(--e-soft); }
+.badge.unverified, .badge.failed, .badge.retired { color: var(--e-bad); border-color: var(--e-bad); }
+.badge.flagged { color: var(--sodium); border-color: var(--sodium); }
+.badge.met { color: var(--go); border-color: var(--go); }
+.badge.worse { color: var(--hold); border-color: var(--hold); }
+
+.rail .strip .what {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.rail .strip .when {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+}
+
+.legend {
+  display: flex; flex-wrap: wrap; gap: 0.3rem 1rem;
+  margin-top: 0.8rem;
+  font-family: var(--mono); font-size: 0.62rem; color: var(--ink-muted);
+}
+.legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.legend i { display: inline-block; width: 3px; height: 0.9rem; background: var(--e-weak); }
+.legend .t-P { background: var(--e-strong); }
+.legend .t-OV { background: var(--e-video); }
+.legend .t-SV-a { background: var(--e-soft); }
+.legend .t-unverified { background: var(--e-bad); }
+
+/* ---------- ledger ------------------------------------------------------ */
+
+.ledger .strip { border-left-width: 5px; }
+.ledger .claim { font-weight: 700; }
+.ledger .claim.retired { text-decoration: line-through; text-decoration-color: var(--hold); }
+
+/* ---------- tables, stacked on phones ----------------------------------- */
+
+.tbl { width: 100%; border-collapse: collapse; font-size: 0.82rem; background: var(--strip); }
+.tbl th {
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-muted); text-align: left; font-weight: 500;
+  padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--rule-bright); background: var(--rack);
+}
+.tbl td { padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.tbl td:first-child { font-weight: 700; }
+.tbl td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.tbl tr.t-independent td:first-child, .tbl tr.t-vendor td:first-child { box-shadow: inset 3px 0 0 var(--e-weak); }
+.tbl tr.t-independent td:first-child { box-shadow: inset 3px 0 0 var(--e-strong); }
+.tbl tr.t-vendor td:first-child { box-shadow: inset 3px 0 0 var(--e-soft); }
+
+.small { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-muted); }
+
+ul.plain { list-style: none; margin: 0; padding: 0; }
+ul.plain li { padding: 0.35rem 0; border-bottom: 1px solid var(--rule); font-size: 0.88rem; }
+
+.empty {
+  border: 1px dashed var(--rule-bright);
+  padding: 0.8rem 1rem;
+  color: var(--ink-muted);
+  font-size: 0.88rem;
+  background: var(--strip);
+}
+
+footer { margin-top: 3rem; padding: 1.5rem 0 2.5rem; border-top: 1px solid var(--rule); background: var(--rack); }
+footer > div { font-family: var(--mono); font-size: 0.68rem; color: var(--ink-muted); line-height: 1.7; }
+
+/* ---------- phone ------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  .bar nav { margin-left: 0; }
+  .bus { display: none; }
+  .strip { grid-template-columns: minmax(0, 1fr); }
+  .strip .who { text-align: left; max-width: none; }
+
+  .tbl, .tbl tbody, .tbl tr, .tbl td { display: block; width: 100%; }
+  .tbl thead { position: absolute; left: -9999px; }
+  .tbl tr { border-bottom: 3px solid var(--rule-bright); padding: 0.3rem 0; }
+  .tbl td { border-bottom: 1px solid var(--rule); padding: 0.35rem 0.7rem; text-align: left !important; }
+  .tbl td::before {
+    content: attr(data-label);
+    display: block;
+    font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-muted); font-weight: 400;
+  }
+}
+</style>
+<link rel="stylesheet" href="https://gcicc.github.io/suite/network.css">
+<script src="https://gcicc.github.io/suite/network.js" data-section="claude-trends" data-built="2026-11-11 19:28 UTC" data-next="on demand (/claude-trends)" defer></script>
+</head>
+<body>
+<noscript><p style="margin:0;padding:.5rem 1rem"><a href="https://gcicc.github.io/suite/">RANGE — all sections</a></p></noscript>
+<header class="bar">
+  <h1>Claude Trends</h1>
+  <span class="sub">delta sweep 2026-10-29 vs 2026-09-29</span>
+
+  <div class="bus" aria-label="Source status"><span class="ok"><i class="dot ok"></i>Anthropic newsroom</span><span class="ok"><i class="dot ok"></i>API release notes</span><span class="ok"><i class="dot ok"></i>Claude Code changelog</span><span class="ok"><i class="dot ok"></i>YouTube official channels</span><span class="ok"><i class="dot ok"></i>YouTube staff search</span><span class="ok"><i class="dot ok"></i>GitHub pass</span><span class="ok"><i class="dot ok"></i>xAI vendor pages</span><span class="ok"><i class="dot ok"></i>LMArena WebDev</span><span class="failed"><i class="dot failed"></i>tbench.ai</span><span class="failed"><i class="dot failed"></i>swebench.com</span><span class="failed"><i class="dot failed"></i>X (x.com)</span></div>
+
+  <nav>
+
+    <a href="#summary">Summary</a>
+    <a href="#features">Features</a>
+    <a href="#retired">Retired</a>
+    <a href="#grok">Grok</a>
+    <a href="#history">History</a>
+
+    <a href="#" id="theme" role="button">Light</a>
+  </nav>
+</header>
+<main>
+
+
+<div class="meta">
+  <div class="label">Latest sweep</div>
+  <div class="date">2026-10-29</div>
+  <p class="headline">Claude Haiku 5.5 launch ($0.10/$0.50, 1M context, default haiku alias) and the always-on push (Tag, Projects, Duet)</p>
+  <div class="facts">
+    <span>baseline <b>2026-09-29</b></span>
+    <span>videos <b>8</b></span>
+    <span>changelog <b>v2.1.285–v2.1.312</b></span>
+    <span>sources ok <b>8/11</b></span>
+  </div>
+  <div class="legend" aria-label="Evidence tiers">
+    <span><i class="t-P"></i>primary / independent</span>
+    <span><i class="t-OV"></i>official or human-captioned video</span>
+    <span><i class="t-SV-a"></i>auto-captioned / vendor</span>
+    <span><i></i>metadata / affiliated / sentiment</span>
+    <span><i class="t-unverified"></i>unverified</span>
+  </div>
+</div>
+
+<section id="summary">
+  
+<div class="head"><h2>Executive summary</h2><span class="n">5 items</span></div>
+
+  <div class="rack">
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Claude Haiku 5.5 launched 2026-10-07 (<code>claude-haiku-5-5</code>): 1M context, $0.10 in / $0.50 out per MTok for prompts of 100K tokens or less, $0.50 / $2.50 above; it is now the default <code>haiku</code> alias in Claude Code (v2.1.293). Sonnet 5.5 cache reads were cut from $0.20 to $0.10 the same day.</div>
+  <div class="who">newsroom · api-release-notes · cc-changelog</div>
+</div>
+
+<div class="strip t-OV">
+  <div class="what"><span class="badge OV" title="Official-channel video, human captions">OV</span>Anthropic is pushing always-on, multi-agent surfaces: Claude Tag (Slack), Claude Code Projects (beta, Pro/Max), cloud sessions, Managed Agents dynamic workflows (beta, 10-09) and Claude Duet (research preview, waitlist). Cherny describes Tag and Projects as the bets that may eventually replace Claude Code itself.</div>
+  <div class="who">newsroom · _f_rtbW_uFM · omihvjf0A2k · djDt8J2_YVs</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Claude Code gained Mods (v2.1.287, 2026-10-01), plugins that change rendering, prompts and tool calls, alongside idle compaction, default-on fork subagents, review levels (Quick/Standard/Deep) for the GitHub Code Review service (v2.1.304; org-level, PR-based, distinct from the local <code>/code-review</code> command) and a cluster of Windows PowerShell hook fixes.</div>
+  <div class="who">cc-changelog · yUuFvL1lK4k</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Platform and ecosystem: API version 2026-10-21 with major-version SDKs (Apache 2.0), Agent Skills donated to the Agentic AI Foundation (10-22), Sonnet 4.5 retirement set for 2026-11-30, and an S-1 filing (10-26).</div>
+  <div class="who">api-release-notes · newsroom</div>
+</div>
+
+<div class="strip t-independent">
+  <div class="what"><span class="badge independent" title="Grok comparison: independent leaderboard; the only tier that may decide a head-to-head">independent</span>Grok comparison (first run): the only clean independent head-to-head is LMArena WebDev (2026-10-27, models only), Claude Opus 5.5 1810 vs Grok 4.7 1637. Grok Bot is a different product category from Claude Code and has no independent benchmark.</div>
+  <div class="who">lmarena · grok-vendor</div>
+</div>
+</div>
+</section>
+
+<section id="sources-bus">
+  
+<div class="head"><h2>Source bus</h2><span class="n">11 sources</span><span class="stamp">fetched 2026-10-29</span></div>
+
+  <div class="rack">
+  
+    <div class="strip t-P">
+      <div class="what"><span class="badge ok">ok</span><b>Anthropic newsroom</b> <span class="small">19 posts: index summaries plus the Haiku 5.5 launch page</span></div>
+      <div class="who">2026-10-29</div>
+    </div>
+  
+    <div class="strip t-P">
+      <div class="what"><span class="badge ok">ok</span><b>API release notes</b> <span class="small">15 dated headings, 37 bullets</span></div>
+      <div class="who">2026-10-29</div>
+    </div>
+  
+    <div class="strip t-P">
+      <div class="what"><span class="badge ok">ok</span><b>Claude Code changelog</b> <span class="small">v2.1.285-v2.1.312 read in full (1,881 lines)</span></div>
+      <div class="who">2026-10-29</div>
+    </div>
+  
+    <div class="strip t-P">
+      <div class="what"><span class="badge ok">ok</span><b>YouTube official channels</b> <span class="small">Claude channel 22 uploads in window (about 15 unique); Anthropic channel 0 (latest 2026-09-23)</span></div>
+      <div class="who">2026-10-29</div>
+    </div>
+  
+    <div class="strip t-P">
+      <div class="what"><span class="badge ok">ok</span><b>YouTube staff search</b> <span class="small">four batched roster searches, 16 names, 65 results, about 500 quota units</span></div>
+      <div class="who">2026-10-29</div>
+    </div>
+  
+    <div class="strip t-P">
+      <div class="what"><span class="badge ok">ok</span><b>GitHub pass</b> <span class="small">window from 2026-09-15; 7 queries; 235 unique repos; shortlist 8</span></div>
+      <div class="who">2026-10-29</div>
+    </div>
+  
+    <div class="strip t-P">
+      <div class="what"><span class="badge ok">ok</span><b>xAI vendor pages</b> <span class="small">x.ai/build/changelog returned 403; fetches summarised by a small model</span></div>
+      <div class="who">2026-10-29</div>
+    </div>
+  
+    <div class="strip t-P">
+      <div class="what"><span class="badge ok">ok</span><b>LMArena WebDev</b> <span class="small">page dated 2026-10-27</span></div>
+      <div class="who">2026-10-29</div>
+    </div>
+  
+    <div class="strip t-unverified">
+      <div class="what"><span class="badge failed">failed</span><b>tbench.ai</b> <span class="small">returned no rows; two mirrors used instead (as of 10-01 and 10-17)</span></div>
+      <div class="who">2026-10-29</div>
+    </div>
+  
+    <div class="strip t-unverified">
+      <div class="what"><span class="badge failed">failed</span><b>swebench.com</b> <span class="small">did not render</span></div>
+      <div class="who">2026-10-29</div>
+    </div>
+  
+    <div class="strip t-unverified">
+      <div class="what"><span class="badge failed">failed</span><b>X (x.com)</b> <span class="small">pages returned 403; no login; sentiment from search snippets</span></div>
+      <div class="who">2026-10-29</div>
+    </div>
+  
+  </div>
+</section>
+
+<section id="history" class="rail">
+  
+<div class="head"><h2>Run history</h2><span class="n">9 reports</span></div>
+
+  <div class="rack">
+  
+    <a class="strip next" href="../reports/claude-trends-2026-10-29-delta.md">
+      <div class="what"><span class="when">2026-10-29</span> · Delta vs 2026-09-29 — 8 videos, Claude Haiku 5.5 launch ($0.10/$0.50, 1M context, default haiku alias) and the always-on push (Tag, Projects, Duet)</div>
+      <div class="who">current</div>
+    </a>
+  
+    <a class="strip " href="../reports/claude-trends-2026-10-13-delta.md">
+      <div class="what"><span class="when">2026-10-13</span> · Delta vs 2026-09-18 — 12 transcripts + Anthropic primary sources (newsroom, API release notes, changelog v2.1.277–v2.1.296; first run with Step 2b built in). The 5.5 family shipped in three weeks (Opus $4/$20, Sonnet $2/$10, Haiku $0.10/$0.50, 1M context, adjustable effort); Claude Code Mods landed 10-01 (in-harness middleware; on unmanaged machines a mod can override deny rules); auto mode now default everywhere; Anthropic&#39;s <code>/doctor prompt-audit</code> codifies &#34;strip config for newer models&#34;; Max/Team plans now include monthly API credits.</div>
+      <div class="who">.md</div>
+    </a>
+  
+    <a class="strip " href="../reports/claude-trends-2026-09-18-delta.md">
+      <div class="what"><span class="when">2026-09-18</span> · Delta vs 2026-09-02 — 14 transcripts + Anthropic first-party + a new cross-domain hobby lane. Cowork and chat merged into one Claude (Docs/Slides/Design in beta); Projects became a coordinator running parallel cloud threads; weekly limits net −17% on 09-14 but the Opus-only cap was removed; Anthropic says Claude leads ~25% of its own R&amp;D. Hobby use led by Home Assistant, tabletop RPG, retro gaming, and hardware-over-USB builds.</div>
+      <div class="who">.md</div>
+    </a>
+  
+    <a class="strip " href="../reports/claude-trends-2026-09-02-delta.md">
+      <div class="what"><span class="when">2026-09-02</span> · Delta vs 2026-07-31 — 5 in-window videos + Anthropic first-party (W32-W34 digests, changelog to v2.1.258) + a new r/ClaudeCode lane. Auto mode became the DEFAULT permission mode on 2026-08-14 with published efficacy data; cross-session messaging landed (Windows too) and the 200-subagent cap was removed five weeks after it shipped; Claude Fable 5.1 released; <code>CLAUDE_CODE_SUBAGENT_MODEL</code> silently became a default rather than an override; Ultraplan and the todo tools were retired. **Transcript coverage was degraded — YouTube IP-blocked after 16 downloads; see Methodology.**</div>
+      <div class="who">.md</div>
+    </a>
+  
+    <a class="strip " href="../reports/claude-trends-2026-07-31-delta.md">
+      <div class="what"><span class="when">2026-07-31</span> · Delta vs 2026-06-22 — 12 videos + Anthropic first-party sources. Opus 5 shipped (beats Fable 5 at half the price, $5/$25 per MTok), Anthropic deleted &gt;80% of Claude Code&#39;s system prompt and shipped <code>/doctor</code> to audit yours, official Opus 5 guide retires verification/double-check scaffolding, Sonnet 5 became the default seat model, plugins proved portable to GitHub Copilot CLI. **First contradictions in the series** — see the live conflict on verification subagents.</div>
+      <div class="who">.md</div>
+    </a>
+  
+    <a class="strip " href="../reports/claude-trends-2026-06-22-delta.md">
+      <div class="what"><span class="when">2026-06-22</span> · Delta vs 2026-05-27 — 9 videos. Dynamic Workflows shipped (width vs goal-loop depth, /deep-research built on it), plugins matured into versioned skills+MCP+hooks bundles (MongoDB canonical), model fallback chains for overnight resilience, Claude Fable 5 (Mythos-class) sighted, skills framed as portable open standard enabling non-engineers.</div>
+      <div class="who">.md</div>
+    </a>
+  
+    <a class="strip " href="../reports/claude-trends-2026-05-27-delta.md">
+      <div class="what"><span class="when">2026-05-27</span> · Delta vs 2026-05-15 — 10 videos. Routines shipped, Managed Agents pricing public, MCP ecosystem (Blender/Paper/BlueDot/ComfyUI/Lemlist) expanding, Hookify plugin, consensus shift toward orchestration over autonomy.</div>
+      <div class="who">.md</div>
+    </a>
+  
+    <a class="strip " href="../reports/legacy/claude-code-2026-features-youtube-research.md">
+      <div class="what"><span class="when">2026-05-15</span> · Baseline — 15 videos. Opus 4.7, XI tier, /ultrareview, forked sub-agents, Agent Teams, Desktop App, 12-feature canonical tour.</div>
+      <div class="who">legacy .md</div>
+    </a>
+  
+    <a class="strip " href="../reports/legacy/claude-code-tips.md">
+      <div class="what"><span class="when">2026-03-14</span> · Tips extract — 16 YouTube tutorials; actionable tips and best practices (pre-series, undated in the old index).</div>
+      <div class="who">legacy .md</div>
+    </a>
+  
+  </div>
+</section>
+
+<section id="features">
+  
+<div class="head"><h2>New features and releases</h2></div>
+
+  
+  <h3>Models</h3>
+  <div class="rack">
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Haiku 5.5: first Haiku-class model with an effort parameter; 128k max output; adaptive thinking on by default; on Claude API, Bedrock, Claude Platform on AWS, Google Cloud, Microsoft Foundry. Breaking changes vs Haiku 4.5 return 400s: manual <code>budget_tokens</code>, <code>temperature</code>/<code>top_p</code>/<code>top_k</code>, assistant prefill, <code>computer_20250124</code>. (10-07)</div>
+  <div class="who">api-release-notes</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Opus 5.5 fast mode left research preview 2026-10-15 (no access request; header optional); also on Microsoft Foundry. The &#34;(research preview)&#34; label was removed from <code>/fast</code> in v2.1.304.</div>
+  <div class="who">api-release-notes · cc-changelog</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Sonnet 4.5 (<code>claude-sonnet-4-5-20250929</code>) deprecated; retirement on Claude API 2026-11-30. (09-30)</div>
+  <div class="who">api-release-notes</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>No Opus, Sonnet or Fable launch posts in the window.</div>
+  <div class="who">newsroom</div>
+</div>
+</div>
+  
+  <h3>Claude Code CLI (v2.1.285-v2.1.312)</h3>
+  <div class="rack">
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Mods (v2.1.287): a mod is a plugin whose <code>hook.json</code> gains a <code>modules</code> key pointing at a TypeScript file that registers functions on internal events (render, tool call, permission check, prompt), Express-middleware style; the demo hides email addresses on screen until hover.</div>
+  <div class="who">cc-changelog · yUuFvL1lK4k</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Built-in &#34;You should know&#34; mod, a side agent that flags what you or Claude may miss (v2.1.287, first-party sessions with telemetry on).</div>
+  <div class="who">cc-changelog</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Idle compaction (v2.1.299): a 200K+ token conversation idle about 54 minutes is compacted before the one-hour prompt cache expires; <code>&#34;idleCompaction&#34;: false</code> turns it off.</div>
+  <div class="who">cc-changelog</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Fork subagents on by default in <code>claude -p</code>, Agent SDK, desktop app and VS Code (v2.1.302); Agent tool gets an <code>effort</code> parameter (v2.1.292); subagent <code>autoCompactWindow</code> (v2.1.296).</div>
+  <div class="who">cc-changelog</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Auto mode: <code>/auto-mode-setup</code> (v2.1.304), <code>CLAUDE_CODE_AUTO_MODE_MODEL</code> (v2.1.302). Hooks: <code>onFailure: &#34;block&#34;</code> (v2.1.295). <code>ultrathink</code> now runs its turn at xhigh effort (v2.1.311).</div>
+  <div class="who">cc-changelog</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Code Review: Quick / Standard (default) / Deep levels (v2.1.304); <code>@claude review stop</code> (v2.1.307).</div>
+  <div class="who">cc-changelog</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Windows: PowerShell hooks now block on exit code 2 and fail closed when Git for Windows is missing (v2.1.299, v2.1.309, v2.1.310); git commands faster (v2.1.309, v2.1.304); exFAT/FAT32 write refusals fixed (v2.1.302); PowerShell tool finds plugin <code>bin/</code> commands (v2.1.302); stdio MCP servers shut down gracefully (v2.1.296).</div>
+  <div class="who">cc-changelog</div>
+</div>
+</div>
+  
+  <h3>Skills, plugins, MCP</h3>
+  <div class="rack">
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Agent Skills open standard donated to the Agentic AI Foundation 2026-10-22; the newsroom index says more than 70 platforms adopted it (index summary only; the post itself was not fetched).</div>
+  <div class="who">newsroom</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>MCP protocol version 2026-07-28 is negotiated by default for stdio servers (v2.1.292) and claude.ai connectors (v2.1.295); <code>MCP_PROTOCOL_NEGOTIATION=legacy</code> opts out.</div>
+  <div class="who">cc-changelog</div>
+</div>
+</div>
+  
+  <h3>Routines, cloud sessions, Projects</h3>
+  <div class="rack">
+<div class="strip t-OV">
+  <div class="what"><span class="badge OV" title="Official-channel video, human captions">OV</span>Claude Code Projects: one conversation coordinates threads, each a full session on its own branch in the cloud; threads watch PRs and fix CI; daily routine checks; beta, rolling out to Pro and Max.</div>
+  <div class="who">omihvjf0A2k</div>
+</div>
+
+<div class="strip t-M">
+  <div class="what"><span class="badge M" title="Description-only metadata for a short upload">M</span>Cloud sessions: own VM, continue while you are away, start from phone; count toward plan limits with no separate compute charge.</div>
+  <div class="who">nJMwXtD56mA</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Cloud routines get an effort picker (v2.1.312); cloud sessions and Remote Control can be gated by Enterprise custom roles (v2.1.310).</div>
+  <div class="who">cc-changelog</div>
+</div>
+</div>
+  
+  <h3>Claude Tag (Slack)</h3>
+  <div class="rack">
+<div class="strip t-OV">
+  <div class="what"><span class="badge OV" title="Official-channel video, human captions">OV</span>Claude in a team channel: remembers channel instructions, works from its own accounts, logs every change, asks permission before acting on your behalf; Team and Enterprise.</div>
+  <div class="who">_f_rtbW_uFM</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Changelog adds Slack Connect channels (off by default), Allow once/Deny cards, <code>!fast</code>, analytics and spend limits; API beta for Tag settings 2026-10-23.</div>
+  <div class="who">cc-changelog · api-release-notes</div>
+</div>
+</div>
+  
+  <h3>Desktop and apps (descriptions only)</h3>
+  <div class="rack">
+<div class="strip t-M">
+  <div class="what"><span class="badge M" title="Description-only metadata for a short upload">M</span>Chat and Cowork merged into one Claude; Docs, Slides, Design out of beta on all plans including Free (10-19); Dashboards (beta, paid plans) and Motion (beta, Team/Enterprise); Claude Duet (see the Grok section B).</div>
+  <div class="who">n9WfoNW2XnE · _Ui4ZkYm4ho · Fb-68zqcSVs</div>
+</div>
+</div>
+  
+  <h3>API and platform</h3>
+  <div class="rack">
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>API version 2026-10-21; SDK majors Python 2.0.0, TypeScript 1.0.0, Go 2.0.0, Java 3.0.0, C# 13.0.0, PHP 1.0.0, Ruby 2.0.0, ant CLI 2.0.0; breaking changes independent of API version; licence Apache 2.0 instead of MIT.</div>
+  <div class="who">api-release-notes</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Managed Agents: dynamic workflows (beta, <code>managed-agents-2026-04-01</code>, 10-09); scheduled deployments on Claude Platform on AWS (10-14); <code>web_fetch</code> limited to URLs already in session context (10-07, anti-exfiltration); org-level web fetch off switch (10-20).</div>
+  <div class="who">api-release-notes</div>
+</div>
+
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>User profiles (<code>/v1/user_profiles</code>) for per-customer enforcement; OpenTelemetry export beta (10-14); Admin API out of beta (09-30); Claude Models on Google Cloud (10-22); Max and Team plans now include monthly API credits (10-07).</div>
+  <div class="who">api-release-notes</div>
+</div>
+</div>
+  
+</section>
+
+<section id="workflows">
+  
+<div class="head"><h2>New workflow patterns</h2></div>
+
+  <div class="rack">
+<div class="strip t-SV-a">
+  <div class="what"><span class="badge SV-a" title="Staff talk, auto-captioned: content reliable, exact wording paraphrased">SV-a</span>Adversarial review, then a judge. Spin off several Claude threads whose only task is to prove the work wrong, then use another Claude to validate the criticisms; prefer hard outside evidence, because &#34;the current session&#34; is a poor judge of its own work. Rieseberg describes running it in Projects with five threads.</div>
+  <div class="who">D-SVFneJ_Nk</div>
+</div>
+
+<div class="strip t-SV-a">
+  <div class="what"><span class="badge SV-a" title="Staff talk, auto-captioned: content reliable, exact wording paraphrased">SV-a</span>Verification evidence on every PR. Claude does a first-pass review that exercises the change like a user (browser, end-to-end, linting); edit hooks study diffs; team taste lives in CLAUDE.md/AGENTS.md; humans check the agent&#39;s evidence (screenshots, video).</div>
+  <div class="who">AnsXWH2_EBU</div>
+</div>
+
+<div class="strip t-SV-a">
+  <div class="what"><span class="badge SV-a" title="Staff talk, auto-captioned: content reliable, exact wording paraphrased">SV-a</span>Give Claude raw data and tools, not curated slices, and document tools well; &#34;model experience&#34; as a design test. Rieseberg&#39;s own caution: upfront setup cost is real.</div>
+  <div class="who">D-SVFneJ_Nk</div>
+</div>
+
+<div class="strip t-SV-a">
+  <div class="what"><span class="badge SV-a" title="Staff talk, auto-captioned: content reliable, exact wording paraphrased">SV-a</span>Be sparing with skills. Rieseberg says Anthropic&#39;s official guidance is to be careful because a skill&#39;s usefulness decays fast, and removing a skill can improve output; most useful where you have an eval.</div>
+  <div class="who">D-SVFneJ_Nk</div>
+</div>
+
+<div class="strip t-OV">
+  <div class="what"><span class="badge OV" title="Official-channel video, human captions">OV</span>Projects economics: coordinator on low effort, threads on a smaller model, switch up for hard tasks; Projects burn plan limits faster than one session.</div>
+  <div class="who">omihvjf0A2k</div>
+</div>
+
+<div class="strip t-SV-h">
+  <div class="what"><span class="badge SV-h" title="Staff talk, human captions">SV-h</span>Sandbox plus auto mode instead of yes/no prompts. Cherny: prompts became &#34;security theater&#34;; a second model without conversation context judges each command. The sandbox is opt-in in Claude Code and on by default in Cowork.</div>
+  <div class="who">djDt8J2_YVs</div>
+</div>
+
+<div class="strip t-OV">
+  <div class="what"><span class="badge OV" title="Official-channel video, human captions">OV</span>One shared company agent in Slack instead of one agent per person, built on Managed Agents (sandboxes, memory, session control); agent acts as a separate entity but on the requester&#39;s behalf for tool calls. Guests are Every staff, not Anthropic.</div>
+  <div class="who">z7cNbsr3b5s</div>
+</div>
+</div>
+</section>
+
+<section id="tools">
+  
+<div class="head"><h2>New tools, MCPs, integrations</h2></div>
+
+  <div class="rack">
+<div class="strip t-P">
+  <div class="what"><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>Claude-native: Claude Tag, Mods, Claude Code Projects, Claude Duet, Claude for Google Workspace (details not fetched), Claude in Chrome (many v2.1.2xx fixes).</div>
+  <div class="who">idJQMJwHtyM · cc-changelog</div>
+</div>
+
+<div class="strip t-OV">
+  <div class="what"><span class="badge OV" title="Official-channel video, human captions">OV</span>Adjacent: Every Agent (Slack agent on Managed Agents); Sonar verification layers; Stripe Link, cited by Krieger as a model for agent purchase approvals, not an integration.</div>
+  <div class="who">z7cNbsr3b5s · AnsXWH2_EBU · ZkDRXs_LvWw</div>
+</div>
+
+<div class="strip t-unverified">
+  <div class="what"><span class="badge unverified" title="Reported, not confirmed">unverified</span>Not counted: Dig AI is a sponsor read inside D-SVFneJ_Nk. &#34;Muse&#34; and &#34;Instinct&#34; and a &#34;model hardware standard&#34; are named by Krieger; none appears in the primary files, and the spellings are caption-uncertain.</div>
+  <div class="who">D-SVFneJ_Nk · ZkDRXs_LvWw</div>
+</div>
+</div>
+</section>
+
+<section id="github">
+  
+<div class="head"><h2>New on GitHub</h2></div>
+
+  <p class="note">Repos created on or after 2026-09-15; 7 queries; 235 unique repos; shortlist 8. READMEs skimmed, nothing installed.</p>
+  
+  
+  
+<table class="tbl">
+  <thead><tr><th>Repo</th><th>Stars</th><th>Age (d)</th><th>Licence</th><th>What it does</th><th>Windows?</th><th>What leaves the machine</th><th>Overlap</th><th>Verdict</th></tr></thead>
+  <tbody>
+  
+    <tr>
+    
+      <td data-label="Repo">tamaratran/fast-jev-compaction</td>
+    
+      <td data-label="Stars">7,795</td>
+    
+      <td data-label="Age (d)">41</td>
+    
+      <td data-label="Licence">MIT</td>
+    
+      <td data-label="What it does">Pre-compact plugin using TypeSafe &#34;Jev&#34; API</td>
+    
+      <td data-label="Windows?">Node plugin, untested</td>
+    
+      <td data-label="What leaves the machine">Full transcript to TypeSafe; <code>TYPESAFE_API_KEY</code></td>
+    
+      <td data-label="Overlap">pre-compact.sh</td>
+    
+      <td data-label="Verdict">watch</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Repo">dzhng/jevgrep</td>
+    
+      <td data-label="Stars">3,062</td>
+    
+      <td data-label="Age (d)">32</td>
+    
+      <td data-label="Licence">MIT</td>
+    
+      <td data-label="What it does">Code search</td>
+    
+      <td data-label="Windows?">Yes (Node 22+)</td>
+    
+      <td data-label="What leaves the machine">Code snippets; Vercel/TypeSafe/OpenRouter key</td>
+    
+      <td data-label="Overlap">none</td>
+    
+      <td data-label="Verdict">skip</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Repo">yetone/magpie</td>
+    
+      <td data-label="Stars">25,219</td>
+    
+      <td data-label="Age (d)">35</td>
+    
+      <td data-label="Licence">MIT</td>
+    
+      <td data-label="What it does">Local gateway routing to other providers, account rotation on quota</td>
+    
+      <td data-label="Windows?">Yes</td>
+    
+      <td data-label="What leaves the machine">Traffic routed to other providers</td>
+    
+      <td data-label="Overlap">none</td>
+    
+      <td data-label="Verdict">watch (ToS risk)</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Repo">QingYunA/answer-me-with-html</td>
+    
+      <td data-label="Stars">4,636</td>
+    
+      <td data-label="Age (d)">26</td>
+    
+      <td data-label="Licence">MIT</td>
+    
+      <td data-label="What it does">Skill returning offline HTML answers</td>
+    
+      <td data-label="Windows?">Skill, likely</td>
+    
+      <td data-label="What leaves the machine">None stated</td>
+    
+      <td data-label="Overlap">Artifact tooling</td>
+    
+      <td data-label="Verdict">try</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Repo">t3dotgg/tstack</td>
+    
+      <td data-label="Stars">2,339</td>
+    
+      <td data-label="Age (d)">4</td>
+    
+      <td data-label="Licence">MIT</td>
+    
+      <td data-label="What it does">Skill pack; council skill calls 3 other providers</td>
+    
+      <td data-label="Windows?">Skills</td>
+    
+      <td data-label="What leaves the machine">Prompts to 3 providers</td>
+    
+      <td data-label="Overlap">code-reviewer agent</td>
+    
+      <td data-label="Verdict">watch (4 days old)</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Repo">MaryCache/imozuru</td>
+    
+      <td data-label="Stars">1,368</td>
+    
+      <td data-label="Age (d)">15</td>
+    
+      <td data-label="Licence">MIT</td>
+    
+      <td data-label="What it does">Citation-chasing research skill (JP-first, README.en exists)</td>
+    
+      <td data-label="Windows?">Yes (PowerShell documented)</td>
+    
+      <td data-label="What leaves the machine">Web search, PDFs</td>
+    
+      <td data-label="Overlap">youtube-research cmd</td>
+    
+      <td data-label="Verdict">try</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Repo">ruc-datalab/EvoOntology</td>
+    
+      <td data-label="Stars">1,090</td>
+    
+      <td data-label="Age (d)">43</td>
+    
+      <td data-label="Licence">MIT</td>
+    
+      <td data-label="What it does">Data-agent research MCP (arXiv 2609.15779)</td>
+    
+      <td data-label="Windows?">Unknown</td>
+    
+      <td data-label="What leaves the machine">MCP traffic</td>
+    
+      <td data-label="Overlap">duckdb MCP</td>
+    
+      <td data-label="Verdict">watch</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Repo">YeonwooSung/my-claude-code-mods</td>
+    
+      <td data-label="Stars">1,099</td>
+    
+      <td data-label="Age (d)">19</td>
+    
+      <td data-label="Licence">Apache-2.0</td>
+    
+      <td data-label="What it does">Context-inspector and agent-profiler mods</td>
+    
+      <td data-label="Windows?">Unknown</td>
+    
+      <td data-label="What leaves the machine">OTLP only if configured</td>
+    
+      <td data-label="Overlap">cost-tracker.sh</td>
+    
+      <td data-label="Verdict">try</td>
+    
+    </tr>
+  
+  </tbody>
+</table>
+
+  <h3>Anomalies</h3>
+  <div class="rack">
+<div class="strip t-unverified">
+  <div class="what"><span class="badge unverified" title="Reported, not confirmed">unverified</span>Star counts are unreliable: Gathin23/cleanyourtv 44,803 stars at 11 days (licence &#34;other&#34;), magpie 25k at 35 days, lemo-opuscar 9.3k, universal-modder 9.2k. Likely inflation or promotion.</div>
+  <div class="who">github</div>
+</div>
+
+<div class="strip t-unverified">
+  <div class="what"><span class="badge unverified" title="Reported, not confirmed">unverified</span>Claude-Guardian (1,265 stars, GPL-3, ban-evasion text) and Folkbench (API relay ranking): skip.</div>
+  <div class="who">github</div>
+</div>
+
+<div class="strip t-unverified">
+  <div class="what"><span class="badge unverified" title="Reported, not confirmed">unverified</span>Jakeschincariol owns 6 of the top 40 (identical 11-skill packs): serial-publisher pattern.</div>
+  <div class="who">github</div>
+</div>
+
+<div class="strip t-unverified">
+  <div class="what"><span class="badge unverified" title="Reported, not confirmed">unverified</span>The &#34;Jev&#34;/TypeSafe cluster (fast-jev-compaction, jevgrep, hermes-jev-skills) looks like coordinated promotion of one vendor.</div>
+  <div class="who">github</div>
+</div>
+</div>
+</section>
+
+<section id="applications">
+  
+<div class="head"><h2>Notable applications</h2></div>
+
+  <div class="rack">
+<div class="strip t-SV-h">
+  <div class="what"><span class="badge SV-h" title="Staff talk, human captions">SV-h</span>Cherny: 12-hour data-analysis sessions launching about 10 parallel agents; a Cowork run that obtained a clamming licence in about 30 minutes.</div>
+  <div class="who">djDt8J2_YVs</div>
+</div>
+
+<div class="strip t-SV-a">
+  <div class="what"><span class="badge SV-a" title="Staff talk, auto-captioned: content reliable, exact wording paraphrased">SV-a</span>Krieger&#39;s Labs &#34;Hatch&#34; (builder plus adversarial verifier agents, months of harnessing) was outperformed by Fable 5.1 with only dynamic workflows. His point: hold product shapes lightly.</div>
+  <div class="who">ZkDRXs_LvWw</div>
+</div>
+
+<div class="strip t-OV">
+  <div class="what"><span class="badge OV" title="Official-channel video, human captions">OV</span>Every&#39;s &#34;Kate pass&#34;: a skill built from 30,000 historical edits, applied as suggested edits in Google Docs.</div>
+  <div class="who">z7cNbsr3b5s</div>
+</div>
+
+<div class="strip t-unverified">
+  <div class="what"><span class="badge unverified" title="Reported, not confirmed">unverified</span>The AnsXWH2_EBU title cites 30,000 merges a day at Anthropic, attributed to an Anthropic post that is not in the newsroom list. Unverified.</div>
+  <div class="who">AnsXWH2_EBU</div>
+</div>
+</div>
+</section>
+
+<section id="pricing">
+  
+<div class="head"><h2>Pricing and cost shifts</h2></div>
+
+  
+  
+  
+<table class="tbl">
+  <thead><tr><th>Item</th><th>Change</th><th>Source</th></tr></thead>
+  <tbody>
+  
+    <tr>
+    
+      <td data-label="Item">Haiku 5.5</td>
+    
+      <td data-label="Change">$0.10 in / $0.50 out per MTok (prompts up to 100K); $0.50 / $2.50 above; cache read $0.01 / $0.05, write $0.125 / $0.625; vs Haiku 4.5 $1 / $5 and Sonnet 5.5 $2 / $10</td>
+    
+      <td data-label="Source">newsroom</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Item">Sonnet 5.5 cache read</td>
+    
+      <td data-label="Change">$0.20 to $0.10 per MTok (Claude Code <code>/cost</code> updated, v2.1.296)</td>
+    
+      <td data-label="Source">api-release-notes, cc-changelog</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Item">Opus 5.5 fast mode</td>
+    
+      <td data-label="Change">Out of research preview; $8 / $40 per MTok (price from the vendor summary of claude.com/pricing)</td>
+    
+      <td data-label="Source">api-release-notes, grok-vendor</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Item">Limits</td>
+    
+      <td data-label="Change">Usage messages renamed &#34;5-hour limit&#34; (v2.1.312); resume warning on Pro/Max when a stale conversation would use a noticeable share of the 5-hour limit (v2.1.304); standard-context sessions that exceed 200K tokens now compact instead of stopping on &#34;Usage credits required for 1M context&#34; (v2.1.311)</td>
+    
+      <td data-label="Source">cc-changelog</td>
+    
+    </tr>
+  
+  </tbody>
+</table>
+
+  <div class="rack" style="margin-top:2px">
+<div class="strip t-unverified">
+  <div class="what"><span class="badge unverified" title="Reported, not confirmed">unverified</span>Cherny says Opus 5.5 efficiency allowed price cuts and higher Pro/Max limits; no primary file in this sweep shows an Opus price change, so that is unconfirmed here.</div>
+  <div class="who">djDt8J2_YVs</div>
+</div>
+</div>
+</section>
+
+<section id="retired" class="ledger">
+  
+<div class="head"><h2>Retired-advice ledger</h2><span class="n">3 entries</span></div>
+
+  <p class="note">No prior baseline report, so nothing retired against a baseline. Within-window contradictions between sources: Consensus shifts: n/a: no prior baseline report.</p>
+  <div class="rack">
+  
+    <div class="strip t-P">
+      <div class="what"><span class="badge retired">retired</span><span class="claim retired">Auto mode is on by default in every Claude Code session (Krieger).</span><br><span class="badge P" title="Anthropic primary file (newsroom, API release notes, Claude Code changelog)">P</span>The changelog says sessions with no permission mode start in <code>default</code> on third-party providers, telemetry-off or fresh installs (v2.1.302), reversing v2.1.285. Primary source wins: treat &#34;on by default everywhere&#34; as wrong, or at best true for some plans.</div>
+      <div class="who">ZkDRXs_LvWw · cc-changelog</div>
+    </div>
+  
+    <div class="strip t-SV-h">
+      <div class="what"><span class="badge flagged">flagged</span><span class="claim flagged">Claude Code prompt-injection success rate is &#34;zero&#34; (Cherny).</span><br><span class="badge SV-h" title="Staff talk, human captions">SV-h</span>Because none could be demonstrated in a one-week bounty. Staff claim with no primary support in these files; the same sentence concedes vulnerabilities &#34;probably still exist&#34;.</div>
+      <div class="who">djDt8J2_YVs</div>
+    </div>
+  
+    <div class="strip t-SV-a">
+      <div class="what"><span class="badge note">note</span><span class="claim note">Model names and surnames in auto-captioned talks.</span><br><span class="badge SV-a" title="Staff talk, auto-captioned: content reliable, exact wording paraphrased">SV-a</span>&#34;Opus 55&#34; in the auto-captions is read as Opus 5.5; speaker surnames are garbled.</div>
+      <div class="who">D-SVFneJ_Nk · AnsXWH2_EBU · ZkDRXs_LvWw</div>
+    </div>
+  
+  </div>
+</section>
+
+<section id="grok">
+  
+<div class="head"><h2>Grok vs Claude</h2></div>
+
+  <p class="note">&#34;Grok bot&#34; currently means: Grok Bot, an always-on agent product (beta since 2026-08-11; <code>@bot</code> on X), per x.ai/news/introducing-grok-bot and docs.x.ai/grok-bot/overview. X users also lump in Grok Build (agent CLI, early beta 2026-05-25, open-sourced 2026-07-15), the Grok 4.7 model (2026-09-21), and Cursor-hosted use (Cursor is reported to be part of xAI&#39;s parent; deal terms unverified). No xAI-owned IDE found.</p>
+  <h3>Reported, not confirmed</h3>
+  <div class="rack">
+<div class="strip t-unverified">
+  <div class="what"><span class="badge unverified" title="Reported, not confirmed">unverified</span>xAI pages and staff now call the company &#34;SpaceXSI&#34;/&#34;SpaceXAI&#34;. The files record that wording in an x.ai guide and footer, but the fetches were summarised by a small model, so the report uses &#34;xAI&#34;.</div>
+  <div class="who">grok-vendor</div>
+</div>
+
+<div class="strip t-unverified">
+  <div class="what"><span class="badge unverified" title="Reported, not confirmed">unverified</span>Grok Bot routes tasks to Claude Opus 5.5 (a Musk post about 2026-10-07, secondary reports only; xAI docs do not confirm).</div>
+  <div class="who">grok-vendor</div>
+</div>
+</div>
+  <p class="note">Fetches were summarised by a small model; every number below was checked against the file text.</p>
+  
+  <h3>A. Grok Build vs Claude Code (coding CLI and agent)</h3>
+  
+  
+<table class="tbl">
+  <thead><tr><th>Dimension</th><th>Claude Code</th><th>Grok Build</th><th>Tier</th><th>Source + date</th></tr></thead>
+  <tbody>
+  
+    <tr class="t-vendor">
+    
+      <td data-label="Dimension">Agent product and surfaces</td>
+    
+      <td data-label="Claude Code">Terminal CLI, VS Code, JetBrains, Desktop, Web, Slack</td>
+    
+      <td data-label="Grok Build">Terminal TUI, headless <code>-p</code>, ACP editors; &#34;1.0&#34; Aug 2026 per third-party only</td>
+    
+      <td data-label="Tier"><span class="badge vendor" title="Grok comparison: vendor-reported (both sides)">vendor</span></td>
+    
+      <td data-label="Source + date">code.claude.com overview; x.ai/news/grok-build-cli, docs.x.ai/build/overview; 2026-10-29</td>
+    
+    </tr>
+  
+    <tr class="t-vendor">
+    
+      <td data-label="Dimension">Current models</td>
+    
+      <td data-label="Claude Code">Fable 5.1; Opus 5.5 (09-22); Sonnet 5.5 (09-28); Haiku 5.5 (10-07)</td>
+    
+      <td data-label="Grok Build">Grok 4.7 (09-21); grok-build-0.1 (256k, May); Fast variant only in Cursor and Build</td>
+    
+      <td data-label="Tier"><span class="badge vendor" title="Grok comparison: vendor-reported (both sides)">vendor</span></td>
+    
+      <td data-label="Source + date">anthropic.com/news; docs.x.ai release notes</td>
+    
+    </tr>
+  
+    <tr class="t-independent">
+    
+      <td data-label="Dimension">Coding benchmarks</td>
+    
+      <td data-label="Claude Code">WebDev Arena (models only, no harness): Opus 5.5 (Max) 1810 rank 1; Sonnet 5.5 (xHigh) 1770 rank 3. Terminal-Bench 4.0 (mirror, unverified): Opus 5.5 + Claude Code, max, 64.8% (as of 10-17). Artificial Analysis: Opus 5.5 (Max) Index 58</td>
+    
+      <td data-label="Grok Build">WebDev Arena: Grok 4.7 (xHigh) 1637 rank 21. Terminal-Bench 4.0 (mirror, unverified): Grok 4.7 + Grok Build, xhigh, 37.58% (board date 09-21). Artificial Analysis: Grok 4.7 (xhigh) Index 34 (a relay says 46: unresolved)</td>
+    
+      <td data-label="Tier"><span class="badge independent" title="Grok comparison: independent leaderboard; the only tier that may decide a head-to-head">independent</span></td>
+    
+      <td data-label="Source + date">arena.ai/leaderboard/webdev &#34;Last updated Oct 27, 2026&#34;; tbench.ai returned no rows; Presenc.ai, DevelopersDigest; artificialanalysis.ai (no page dates)</td>
+    
+    </tr>
+  
+    <tr class="t-vendor">
+    
+      <td data-label="Dimension">Price</td>
+    
+      <td data-label="Claude Code">API $/MTok in/out: Fable 5.1 10/50; Opus 5.5 4/20; Sonnet 5.5 2/10; Haiku 5.5 0.10/0.50 (up to 100K). Pro $20/mo; Max from $100; no numeric limits published</td>
+    
+      <td data-label="Grok Build">Grok 4.7 2/6 (below 200K prompt; cached 0.50), 4/12 above; grok-build-0.1 1/2. SuperGrok about $30/mo and Heavy $300/mo (third-party, not confirmed on an xAI page). Rate limits: no numbers found</td>
+    
+      <td data-label="Tier"><span class="badge vendor" title="Grok comparison: vendor-reported (both sides)">vendor</span></td>
+    
+      <td data-label="Source + date">claude.com/pricing; docs.x.ai/docs/models; 2026-10-29</td>
+    
+    </tr>
+  
+    <tr class="t-vendor">
+    
+      <td data-label="Dimension">Context window</td>
+    
+      <td data-label="Claude Code">1M for Haiku 5.5 (API notes); Opus 4.7+/Sonnet 5+/Fable use 1M by default behind gateways and on Bedrock/Vertex/Foundry (v2.1.285, v2.1.287); Anthropic-API default not stated in the files</td>
+    
+      <td data-label="Grok Build">Grok 4.7 500k; grok-build-0.1 256k; 4.3 and 4.20 variants 1M</td>
+    
+      <td data-label="Tier"><span class="badge vendor" title="Grok comparison: vendor-reported (both sides)">vendor</span></td>
+    
+      <td data-label="Source + date">api-release-notes.md, cc-changelog.md; docs.x.ai</td>
+    
+    </tr>
+  
+    <tr class="t-vendor">
+    
+      <td data-label="Dimension">Agent features</td>
+    
+      <td data-label="Claude Code">Subagents, skills, hooks, MCP, mods, Agent SDK, <code>/schedule</code>, <code>/loop</code>; reads AGENTS.md</td>
+    
+      <td data-label="Grok Build">AGENTS.md, plugins, hooks, skills, MCP, plan mode, parallel-worktree subagents. Scheduling: not found. Reads CLAUDE.md: not confirmed</td>
+    
+      <td data-label="Tier"><span class="badge vendor" title="Grok comparison: vendor-reported (both sides)">vendor</span></td>
+    
+      <td data-label="Source + date">as above</td>
+    
+    </tr>
+  
+    <tr class="t-vendor">
+    
+      <td data-label="Dimension">Windows</td>
+    
+      <td data-label="Claude Code">Native PowerShell/CMD installers, WinGet; Git for Windows recommended; Desktop x64 and ARM64; Windows hook fixes in this window</td>
+    
+      <td data-label="Grok Build">Native PowerShell installer (<code>irm https://x.ai/cli/install.ps1 | iex</code>), <code>%USERPROFILE%\.grok\config.toml</code></td>
+    
+      <td data-label="Tier"><span class="badge vendor" title="Grok comparison: vendor-reported (both sides)">vendor</span></td>
+    
+      <td data-label="Source + date">code.claude.com; docs.x.ai/build/overview</td>
+    
+    </tr>
+  
+    <tr class="t-vendor">
+    
+      <td data-label="Dimension">Data use and retention</td>
+    
+      <td data-label="Claude Code">Consumer: trains if setting on, 5-year retention, off = 30 days. Commercial: no training, 30 days, ZDR on request</td>
+    
+      <td data-label="Grok Build">xAI&#39;s own training and retention terms for Grok Build: not found</td>
+    
+      <td data-label="Tier"><span class="badge vendor" title="Grok comparison: vendor-reported (both sides)">vendor</span></td>
+    
+      <td data-label="Source + date">code.claude.com/docs/en/data-usage</td>
+    
+    </tr>
+  
+    <tr class="t-affiliated">
+    
+      <td data-label="Dimension">How insiders use it</td>
+    
+      <td data-label="Claude Code">Cherny: all surfaces, hundreds of agents a day typical, &#34;all of our products are built using Claude Code&#34;; Osmani: first-pass Claude review plus edit hooks</td>
+    
+      <td data-label="Grok Build">No Grok Build insider found; Lingxi Li&#39;s workflow centres on Bot and Cursor agents</td>
+    
+      <td data-label="Tier"><span class="badge affiliated" title="Grok comparison: affiliated practitioners; not evidence of performance">affiliated</span></td>
+    
+      <td data-label="Source + date">djDt8J2_YVs, AnsXWH2_EBU; x.ai/bot/guides (2026-09-10)</td>
+    
+    </tr>
+  
+    <tr class="t-sentiment">
+    
+      <td data-label="Dimension">What X is saying</td>
+    
+      <td data-label="Claude Code">Claude limit complaints</td>
+    
+      <td data-label="Grok Build">Grok Build weekly pool called generous by promoters (pre-window); some burned a SuperGrok week in 2-3 hours; hybrid &#34;Claude plans, Grok CLI writes&#34; (pre-window)</td>
+    
+      <td data-label="Tier"><span class="badge sentiment" title="Grok comparison: X posts and threads; sentiment, never evidence of performance">sentiment</span></td>
+    
+      <td data-label="Source + date">WebSearch snippets; x.com fetches returned 403</td>
+    
+    </tr>
+  
+  </tbody>
+</table>
+
+  
+  <h3>B. Grok Bot vs Claude&#39;s always-on agent products</h3>
+  <p class="note">Grok Bot has no independent benchmark; no performance ranking is offered. Rows are vendor descriptions unless marked.</p>
+  
+<table class="tbl">
+  <thead><tr><th>Dimension</th><th>Grok Bot</th><th>Claude Tag</th><th>Cloud sessions / Projects / routines</th><th>Claude Duet</th><th>Managed Agents</th></tr></thead>
+  <tbody>
+  
+    <tr>
+    
+      <td data-label="Dimension">What it is</td>
+    
+      <td data-label="Grok Bot">Always-on &#34;teammates&#34; with a persistent cloud computer (browser, files, terminal), routines, Pages (2026-10-21, per Bot&#39;s X post)</td>
+    
+      <td data-label="Claude Tag">Claude as a multiplayer teammate inside a Slack channel</td>
+    
+      <td data-label="Cloud sessions / Projects / routines">Claude Code sessions on a cloud VM; Projects coordinates threads on branches</td>
+    
+      <td data-label="Claude Duet">Phone app: Claude brings what needs attention, checks before acting for you</td>
+    
+      <td data-label="Managed Agents">API for building your own agents (sandboxes, memory, sessions)</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Dimension">Where it lives</td>
+    
+      <td data-label="Grok Bot">Chat UI, desktop app (Windows x64/Arm64), <code>@bot</code> on X</td>
+    
+      <td data-label="Claude Tag">Slack</td>
+    
+      <td data-label="Cloud sessions / Projects / routines">Claude app/web/phone to cloud VM</td>
+    
+      <td data-label="Claude Duet">Phone</td>
+    
+      <td data-label="Managed Agents">Your product (e.g. Every Agent in Slack)</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Dimension">Persistence and autonomy</td>
+    
+      <td data-label="Grok Bot">Persistent machine; scheduled routines</td>
+    
+      <td data-label="Claude Tag">Keeps working while you move on; Cherny: schedules its own check-ins (e.g. 12 h later)</td>
+    
+      <td data-label="Cloud sessions / Projects / routines">Continues after the laptop closes; parallel threads; PR watching; daily routines</td>
+    
+      <td data-label="Claude Duet">Keeps working after you put the phone down</td>
+    
+      <td data-label="Managed Agents">Durable sessions and memory; dynamic workflows (beta 10-09); scheduled deployments (AWS)</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Dimension">Acting on your behalf and approval</td>
+    
+      <td data-label="Grok Bot">One shared machine, files and logins for all of an account&#39;s Bots; sentiment says &#34;Always Allow&#34; removes the approval gate</td>
+    
+      <td data-label="Claude Tag">Acts from its own accounts, logs every change; asks permission each time it responds as you; Allow once/Deny cards</td>
+    
+      <td data-label="Cloud sessions / Projects / routines">Plan limits apply; permission modes and auto mode as in Claude Code</td>
+    
+      <td data-label="Claude Duet">&#34;Checks before acting on your behalf&#34; (description only)</td>
+    
+      <td data-label="Managed Agents">Org web-fetch controls; per-customer user profiles; Every: acts as you for tool calls</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Dimension">Plans, availability, pricing</td>
+    
+      <td data-label="Grok Bot">SuperGrok/Plus/Heavy, Cursor Pro/Pro+/Ultra, Teams; Enterprise waitlist; docs conflict on whether usage is separate or a shared weekly pool</td>
+    
+      <td data-label="Claude Tag">Team and Enterprise</td>
+    
+      <td data-label="Cloud sessions / Projects / routines">Pro/Max/Team/Enterprise premium seats; Projects beta for Pro/Max; no separate compute charge</td>
+    
+      <td data-label="Claude Duet">Research preview, waitlist, Pro/Max, US only</td>
+    
+      <td data-label="Managed Agents">API usage; price not found in files</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Dimension">Data and retention</td>
+    
+      <td data-label="Grok Bot">Runs through Cursor&#39;s servers; Privacy Mode on = not used for training; deletion within 30 days after service end; Action Recording 90 days (Enterprise)</td>
+    
+      <td data-label="Claude Tag">Not found</td>
+    
+      <td data-label="Cloud sessions / Projects / routines">Claude Code terms above</td>
+    
+      <td data-label="Claude Duet">Not found</td>
+    
+      <td data-label="Managed Agents">Not found</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Dimension">How insiders use it</td>
+    
+      <td data-label="Grok Bot">Lingxi Li (SpaceXSI per page; 2026-09-10): five engineer Bots, 30-min loop over a Notion PR database, nightly audits, P0 transcript check every 5 min (token heavy). John Bai (design, 2026-08-24). Vendor-hosted, promotional, both pre-window</td>
+    
+      <td data-label="Claude Tag">Krieger: Tag used &#34;extensively&#34; inside Anthropic, including a &#34;decisions waiting&#34; digest; Rieseberg recommends Tag as the team feedback agent; Cherny: first product merging coding and non-coding</td>
+    
+      <td data-label="Cloud sessions / Projects / routines">Cherny: sessions across desktop, Slack, terminal, phone</td>
+    
+      <td data-label="Claude Duet">Not found</td>
+    
+      <td data-label="Managed Agents">Every (customer)</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Dimension">Sentiment</td>
+    
+      <td data-label="Grok Bot">Different category from Claude Code; enthusiasts say Bot replaces Claude Code; shared-machine trust concerns; limits dominate</td>
+    
+      <td data-label="Claude Tag">Not collected</td>
+    
+      <td data-label="Cloud sessions / Projects / routines">Not collected</td>
+    
+      <td data-label="Claude Duet">Not collected</td>
+    
+      <td data-label="Managed Agents">Not collected</td>
+    
+    </tr>
+  
+  </tbody>
+</table>
+
+  
+  <h3>Changed since last run</h3><p class="note">First comparison.</p>
+  <h3>Vendor claims contradicted by independent sources</h3><p class="note">None found. Unresolved vendor-versus-vendor gaps: Terminal-Bench 4.0 for Fable 5.1 is 57.9 in xAI&#39;s table but 55.8 in Anthropic&#39;s, and xAI&#39;s 57.9 equals the figure Anthropic gives GPT-6 Astra; Artificial Analysis Grok 4.7 Index 34 versus a relay&#39;s 46. Anthropic&#39;s 66.4% (xhigh) vs the 64.8% mirror (max) is within stated error; xAI&#39;s 37.6 vs the 37.58 board entry is consistent. CursorBench is not neutral for xAI because Cursor is reported to be part of its parent.</p>
+  <h3>Bottom line for this work</h3><p class="note">On the one clean independent head-to-head (LMArena WebDev, 2026-10-27, models only) Claude Opus 5.5 leads Grok 4.7 by 173 points; Terminal-Bench points the same way but rests on mirrors, different harnesses and efforts, so the report does not rank it. Both CLIs ship native Windows installers, but Claude Code has documented data terms and a run of Windows hook fixes in this window, while Grok Build&#39;s data terms were not found; Grok Bot is a general always-on work agent with no independent benchmark, and its nearest Claude equivalents (cloud sessions with routines, Tag, Duet) differ in tier and availability, so for solo local Python/R/.qmd work on Windows nothing in tier 1-2 evidence argues for switching from a local Claude Code session (inference).</p>
+</section>
+
+<section id="roster">
+  
+<div class="head"><h2>Roster changes proposed</h2><span class="n">10 rows</span></div>
+
+  
+  
+  
+<table class="tbl">
+  <thead><tr><th>Name</th><th>Proposed change</th><th>Evidence</th></tr></thead>
+  <tbody>
+  
+    <tr>
+    
+      <td data-label="Name">Felix Rieseberg</td>
+    
+      <td data-label="Proposed change">Update evidence to 2026-10-20; promote to <code>current</code></td>
+    
+      <td data-label="Evidence">D-SVFneJ_Nk (49 min, Silicon Valley Girl; states he leads engineering for Claude)</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Name">Boris Cherny</td>
+    
+      <td data-label="Proposed change">Update evidence to 2026-09-26; <code>current</code></td>
+    
+      <td data-label="Evidence">djDt8J2_YVs (CHM Live; published before the window)</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Name">Mike Krieger</td>
+    
+      <td data-label="Proposed change">Update evidence to 2026-10-06; <code>current</code></td>
+    
+      <td data-label="Evidence">ZkDRXs_LvWw (Sierra CXO Summit; Anthropic Labs)</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Name">Addy Osmani</td>
+    
+      <td data-label="Proposed change">Update evidence to 2026-10-28; <code>current</code></td>
+    
+      <td data-label="Evidence">AnsXWH2_EBU (AI Engineer; says he recently joined Anthropic to own Claude Code developer experience). Passed speaker verification directly</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Name">Katelyn Lesse (Head of Platform Engineering)</td>
+    
+      <td data-label="Proposed change">New candidate</td>
+    
+      <td data-label="Evidence">z7cNbsr3b5s (name from the video description checked during verification; the transcript text does not name the host)</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Name">Lydia (Mods video)</td>
+    
+      <td data-label="Proposed change">New candidate; surname needed</td>
+    
+      <td data-label="Evidence">yUuFvL1lK4k; first name only</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Name">Doug (Claude Docs video)</td>
+    
+      <td data-label="Proposed change">New candidate; surname needed</td>
+    
+      <td data-label="Evidence">N9TUbGO6Kr4; &#34;Doug (product engineer, Anthropic)&#34; [M]</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Name">Nate (designer, Claude Design video)</td>
+    
+      <td data-label="Proposed change">New candidate; surname needed</td>
+    
+      <td data-label="Evidence">COJAZQM1aeQ; [M]</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Name">Barry Zhang, Mahesh Murag; Alex Albert</td>
+    
+      <td data-label="Proposed change">No change</td>
+    
+      <td data-label="Evidence">Only re-clips of a December 2025 talk; a Vietnamese dub calls Albert a &#34;research PM&#34; (unverified)</td>
+    
+    </tr>
+  
+    <tr>
+    
+      <td data-label="Name">Thariq Shihipar</td>
+    
+      <td data-label="Proposed change">Departed 2026-10-24 (already recorded)</td>
+    
+      <td data-label="Evidence">n/a</td>
+    
+    </tr>
+  
+  </tbody>
+</table>
+
+</section>
+
+<section id="sources">
+  
+<div class="head"><h2>Sources</h2><span class="n">8 videos</span></div>
+
+  
+  
+  
+<table class="tbl">
+  <thead><tr><th>Video ID</th><th>Title</th><th>Channel</th><th>Speaker</th><th>Date</th><th>Tier</th></tr></thead>
+  <tbody>
+  
+    <tr class="t-SV-a">
+    
+      <td data-label="Video ID">D-SVFneJ_Nk</td>
+    
+      <td data-label="Title">Claude Engineering Lead: Stop Using Claude Like It&#39;s 2024</td>
+    
+      <td data-label="Channel">Silicon Valley Girl</td>
+    
+      <td data-label="Speaker">Felix Rieseberg</td>
+    
+      <td data-label="Date">2026-10-20</td>
+    
+      <td data-label="Tier"><span class="badge SV-a" title="Staff talk, auto-captioned: content reliable, exact wording paraphrased">SV-a</span></td>
+    
+    </tr>
+  
+    <tr class="t-SV-a">
+    
+      <td data-label="Video ID">AnsXWH2_EBU</td>
+    
+      <td data-label="Title">How Anthropic Merges 30,000 Code Changes a Day</td>
+    
+      <td data-label="Channel">AI Engineer</td>
+    
+      <td data-label="Speaker">Addy Osmani (with Manish Kapoor, Sonar)</td>
+    
+      <td data-label="Date">2026-10-28</td>
+    
+      <td data-label="Tier"><span class="badge SV-a" title="Staff talk, auto-captioned: content reliable, exact wording paraphrased">SV-a</span></td>
+    
+    </tr>
+  
+    <tr class="t-SV-h">
+    
+      <td data-label="Video ID">djDt8J2_YVs</td>
+    
+      <td data-label="Title">CHM Live | Anthropic&#39;s Boris Cherny, Creator of Claude Code</td>
+    
+      <td data-label="Channel">Computer History Museum</td>
+    
+      <td data-label="Speaker">Boris Cherny</td>
+    
+      <td data-label="Date">2026-09-26</td>
+    
+      <td data-label="Tier"><span class="badge SV-h" title="Staff talk, human captions">SV-h</span></td>
+    
+    </tr>
+  
+    <tr class="t-SV-a">
+    
+      <td data-label="Video ID">ZkDRXs_LvWw</td>
+    
+      <td data-label="Title">Sierra CXO Summit: Lessons Learned at the Frontier with Anthropic Labs&#39; Mike Krieger</td>
+    
+      <td data-label="Channel">SIERRA Ventures</td>
+    
+      <td data-label="Speaker">Mike Krieger</td>
+    
+      <td data-label="Date">2026-10-06</td>
+    
+      <td data-label="Tier"><span class="badge SV-a" title="Staff talk, auto-captioned: content reliable, exact wording paraphrased">SV-a</span></td>
+    
+    </tr>
+  
+    <tr class="t-OV">
+    
+      <td data-label="Video ID">omihvjf0A2k</td>
+    
+      <td data-label="Title">Getting started with Claude Code Projects</td>
+    
+      <td data-label="Channel">Claude</td>
+    
+      <td data-label="Speaker">Unnamed narrator</td>
+    
+      <td data-label="Date">2026-10-09</td>
+    
+      <td data-label="Tier"><span class="badge OV" title="Official-channel video, human captions">OV</span></td>
+    
+    </tr>
+  
+    <tr class="t-OV">
+    
+      <td data-label="Video ID">z7cNbsr3b5s</td>
+    
+      <td data-label="Title">Building secure agents for knowledge work</td>
+    
+      <td data-label="Channel">Claude</td>
+    
+      <td data-label="Speaker">Katelyn Lesse (per description) with Every staff</td>
+    
+      <td data-label="Date">2026-10-06</td>
+    
+      <td data-label="Tier"><span class="badge OV" title="Official-channel video, human captions">OV</span></td>
+    
+    </tr>
+  
+    <tr class="t-OV">
+    
+      <td data-label="Video ID">yUuFvL1lK4k</td>
+    
+      <td data-label="Title">Mods in Claude Code: change how Claude Code works</td>
+    
+      <td data-label="Channel">Claude</td>
+    
+      <td data-label="Speaker">Lydia (first name only)</td>
+    
+      <td data-label="Date">2026-10-05</td>
+    
+      <td data-label="Tier"><span class="badge OV" title="Official-channel video, human captions">OV</span></td>
+    
+    </tr>
+  
+    <tr class="t-OV">
+    
+      <td data-label="Video ID">_f_rtbW_uFM</td>
+    
+      <td data-label="Title">Getting started with Claude Tag</td>
+    
+      <td data-label="Channel">Claude</td>
+    
+      <td data-label="Speaker">Unnamed narrator</td>
+    
+      <td data-label="Date">2026-09-29</td>
+    
+      <td data-label="Tier"><span class="badge OV" title="Official-channel video, human captions">OV</span></td>
+    
+    </tr>
+  
+  </tbody>
+</table>
+
+  <p class="note">Metadata only (under 3 minutes, descriptions only): N9TUbGO6Kr4, Fb-68zqcSVs, _Ui4ZkYm4ho, nJMwXtD56mA, n9WfoNW2XnE, iFHsEHP437U, COJAZQM1aeQ, NzcRprKWbD8 / bVXiNb9RyyI, idJQMJwHtyM. Excluded as not staff-speaking: N6FkmdL0Lg0 (Factory customer story), 9GtcbnmldcY (Shopify CTO).</p>
+</section>
+
+<section id="methodology">
+  
+<div class="head"><h2>Methodology</h2></div>
+
+  <ul class="plain"><li>Official channels (2.1): Claude channel 22 uploads in window (about 15 unique after aspect-ratio duplicates); Anthropic channel 0 (latest 2026-09-23).</li><li>Staff searches (2.2): four batched roster searches (16 names, 65 results, about 500 quota units). 1 passed speaker verification directly (Addy Osmani); 3 originals were recovered by tracing commentary to its source (Rieseberg, Cherny, Krieger). About 61 dropped: commentary or reaction videos, re-clips of a December 2025 Zhang/Murag talk, Shorts, name collisions (Adam Wolff church services, an unrelated Alex Albert, Krieger Instagram-history videos). Search dates not recorded in the inputs.</li><li>Filters: videos under 3 minutes used as metadata only. Step 8 playlist skipped. Transcripts 8 of 8 downloaded, 3 auto-captioned; sponsor reads in D-SVFneJ_Nk ignored.</li><li>Primary sources: newsroom 19 posts (index summaries plus the Haiku 5.5 launch page); API release notes 15 dated headings, 37 bullets; changelog v2.1.285-v2.1.312 read in full (1,881 lines).</li><li>GitHub: window start 2026-09-15; 7 queries; 235 unique repos; shortlist 8.</li><li>Grok: xAI pages per grok/vendor.md (Bot overview/security/FAQ, grok-build-cli, grok-build-open-source, build overview, grok-4-7, models, release notes; x.ai/build/changelog returned 403). Leaderboards: LMArena WebDev (page dated 2026-10-27); tbench.ai returned no rows, so two mirrors (as of 10-01 and 10-17); Artificial Analysis (no page dates); swebench.com did not render. X pages returned 403; no login. Affiliated items: 2 counted (both SpaceXSI per page text, both pre-window), 5 not counted. Sentiment: 7 themes from search snippets, many pre-window. Number of searches not recorded. Fetches were summarised by a small model.</li></ul>
+</section>
+
+</main>
+<footer>
+
+  <div>CLAUDE TRENDS — built 2026-11-11 19:28 UTC from run 2026-10-29. Refreshed when the <code>/claude-trends</code> sweep runs, not on a schedule. Full report: <a href="../reports/claude-trends-2026-10-29-delta.md">2026-10-29 delta (.md)</a>.</div>
+
+</footer>
+<script id="payload" type="application/json">{"schema":1,"meta":{"date":"2026-10-29","baseline":"2026-09-29","baseline_note":"30-day default; no prior baseline report existed in that folder, so everything in the window is treated as new.","videos":8,"videos_note":"7 uploaded 2026-09-29 to 2026-10-28, plus djDt8J2_YVs (published 2026-09-26, included deliberately).","changelog":{"from":"2.1.285","to":"2.1.312","versions":26,"note":"the file contains no 2.1.297 or 2.1.298"},"headline":"Claude Haiku 5.5 launch ($0.10/$0.50, 1M context, default haiku alias) and the always-on push (Tag, Projects, Duet)","report":"../reports/claude-trends-2026-10-29-delta.md"},"tiers":{"P":"Anthropic primary file (newsroom, API release notes, Claude Code changelog)","OV":"Official-channel video, human captions","SV-h":"Staff talk, human captions","SV-a":"Staff talk, auto-captioned: content reliable, exact wording paraphrased","M":"Description-only metadata for a short upload","vendor":"Grok comparison: vendor-reported (both sides)","affiliated":"Grok comparison: affiliated practitioners; not evidence of performance","independent":"Grok comparison: independent leaderboard; the only tier that may decide a head-to-head","sentiment":"Grok comparison: X posts and threads; sentiment, never evidence of performance","unverified":"Reported, not confirmed"},"sources":[{"id":"newsroom","name":"Anthropic newsroom","fetched_at":"2026-10-29","status":"ok","note":"19 posts: index summaries plus the Haiku 5.5 launch page"},{"id":"api-release-notes","name":"API release notes","fetched_at":"2026-10-29","status":"ok","note":"15 dated headings, 37 bullets"},{"id":"cc-changelog","name":"Claude Code changelog","fetched_at":"2026-10-29","status":"ok","note":"v2.1.285-v2.1.312 read in full (1,881 lines)"},{"id":"yt-official","name":"YouTube official channels","fetched_at":"2026-10-29","status":"ok","note":"Claude channel 22 uploads in window (about 15 unique); Anthropic channel 0 (latest 2026-09-23)"},{"id":"yt-staff","name":"YouTube staff search","fetched_at":"2026-10-29","status":"ok","note":"four batched roster searches, 16 names, 65 results, about 500 quota units"},{"id":"github","name":"GitHub pass","fetched_at":"2026-10-29","status":"ok","note":"window from 2026-09-15; 7 queries; 235 unique repos; shortlist 8"},{"id":"grok-vendor","name":"xAI vendor pages","fetched_at":"2026-10-29","status":"ok","note":"x.ai/build/changelog returned 403; fetches summarised by a small model"},{"id":"lmarena","name":"LMArena WebDev","fetched_at":"2026-10-29","status":"ok","note":"page dated 2026-10-27"},{"id":"tbench","name":"tbench.ai","fetched_at":"2026-10-29","status":"failed","note":"returned no rows; two mirrors used instead (as of 10-01 and 10-17)"},{"id":"swebench","name":"swebench.com","fetched_at":"2026-10-29","status":"failed","note":"did not render"},{"id":"x-com","name":"X (x.com)","fetched_at":"2026-10-29","status":"failed","note":"pages returned 403; no login; sentiment from search snippets"}],"sections":{"exec_summary":[{"text":"Claude Haiku 5.5 launched 2026-10-07 (`claude-haiku-5-5`): 1M context, $0.10 in / $0.50 out per MTok for prompts of 100K tokens or less, $0.50 / $2.50 above; it is now the default `haiku` alias in Claude Code (v2.1.293). Sonnet 5.5 cache reads were cut from $0.20 to $0.10 the same day.","tier":"P","src":["newsroom","api-release-notes","cc-changelog"]},{"text":"Anthropic is pushing always-on, multi-agent surfaces: Claude Tag (Slack), Claude Code Projects (beta, Pro/Max), cloud sessions, Managed Agents dynamic workflows (beta, 10-09) and Claude Duet (research preview, waitlist). Cherny describes Tag and Projects as the bets that may eventually replace Claude Code itself.","tier":"OV","src":["newsroom","_f_rtbW_uFM","omihvjf0A2k","djDt8J2_YVs"]},{"text":"Claude Code gained Mods (v2.1.287, 2026-10-01), plugins that change rendering, prompts and tool calls, alongside idle compaction, default-on fork subagents, review levels (Quick/Standard/Deep) for the GitHub Code Review service (v2.1.304; org-level, PR-based, distinct from the local `/code-review` command) and a cluster of Windows PowerShell hook fixes.","tier":"P","src":["cc-changelog","yUuFvL1lK4k"]},{"text":"Platform and ecosystem: API version 2026-10-21 with major-version SDKs (Apache 2.0), Agent Skills donated to the Agentic AI Foundation (10-22), Sonnet 4.5 retirement set for 2026-11-30, and an S-1 filing (10-26).","tier":"P","src":["api-release-notes","newsroom"]},{"text":"Grok comparison (first run): the only clean independent head-to-head is LMArena WebDev (2026-10-27, models only), Claude Opus 5.5 1810 vs Grok 4.7 1637. Grok Bot is a different product category from Claude Code and has no independent benchmark.","tier":"independent","src":["lmarena","grok-vendor"]}],"features":[{"area":"Models","items":[{"text":"Haiku 5.5: first Haiku-class model with an effort parameter; 128k max output; adaptive thinking on by default; on Claude API, Bedrock, Claude Platform on AWS, Google Cloud, Microsoft Foundry. Breaking changes vs Haiku 4.5 return 400s: manual `budget_tokens`, `temperature`/`top_p`/`top_k`, assistant prefill, `computer_20250124`. (10-07)","tier":"P","src":["api-release-notes"]},{"text":"Opus 5.5 fast mode left research preview 2026-10-15 (no access request; header optional); also on Microsoft Foundry. The \"(research preview)\" label was removed from `/fast` in v2.1.304.","tier":"P","src":["api-release-notes","cc-changelog"]},{"text":"Sonnet 4.5 (`claude-sonnet-4-5-20250929`) deprecated; retirement on Claude API 2026-11-30. (09-30)","tier":"P","src":["api-release-notes"]},{"text":"No Opus, Sonnet or Fable launch posts in the window.","tier":"P","src":["newsroom"]}]},{"area":"Claude Code CLI (v2.1.285-v2.1.312)","items":[{"text":"Mods (v2.1.287): a mod is a plugin whose `hook.json` gains a `modules` key pointing at a TypeScript file that registers functions on internal events (render, tool call, permission check, prompt), Express-middleware style; the demo hides email addresses on screen until hover.","tier":"P","src":["cc-changelog","yUuFvL1lK4k"]},{"text":"Built-in \"You should know\" mod, a side agent that flags what you or Claude may miss (v2.1.287, first-party sessions with telemetry on).","tier":"P","src":["cc-changelog"]},{"text":"Idle compaction (v2.1.299): a 200K+ token conversation idle about 54 minutes is compacted before the one-hour prompt cache expires; `\"idleCompaction\": false` turns it off.","tier":"P","src":["cc-changelog"]},{"text":"Fork subagents on by default in `claude -p`, Agent SDK, desktop app and VS Code (v2.1.302); Agent tool gets an `effort` parameter (v2.1.292); subagent `autoCompactWindow` (v2.1.296).","tier":"P","src":["cc-changelog"]},{"text":"Auto mode: `/auto-mode-setup` (v2.1.304), `CLAUDE_CODE_AUTO_MODE_MODEL` (v2.1.302). Hooks: `onFailure: \"block\"` (v2.1.295). `ultrathink` now runs its turn at xhigh effort (v2.1.311).","tier":"P","src":["cc-changelog"]},{"text":"Code Review: Quick / Standard (default) / Deep levels (v2.1.304); `@claude review stop` (v2.1.307).","tier":"P","src":["cc-changelog"]},{"text":"Windows: PowerShell hooks now block on exit code 2 and fail closed when Git for Windows is missing (v2.1.299, v2.1.309, v2.1.310); git commands faster (v2.1.309, v2.1.304); exFAT/FAT32 write refusals fixed (v2.1.302); PowerShell tool finds plugin `bin/` commands (v2.1.302); stdio MCP servers shut down gracefully (v2.1.296).","tier":"P","src":["cc-changelog"]}]},{"area":"Skills, plugins, MCP","items":[{"text":"Agent Skills open standard donated to the Agentic AI Foundation 2026-10-22; the newsroom index says more than 70 platforms adopted it (index summary only; the post itself was not fetched).","tier":"P","src":["newsroom"]},{"text":"MCP protocol version 2026-07-28 is negotiated by default for stdio servers (v2.1.292) and claude.ai connectors (v2.1.295); `MCP_PROTOCOL_NEGOTIATION=legacy` opts out.","tier":"P","src":["cc-changelog"]}]},{"area":"Routines, cloud sessions, Projects","items":[{"text":"Claude Code Projects: one conversation coordinates threads, each a full session on its own branch in the cloud; threads watch PRs and fix CI; daily routine checks; beta, rolling out to Pro and Max.","tier":"OV","src":["omihvjf0A2k"]},{"text":"Cloud sessions: own VM, continue while you are away, start from phone; count toward plan limits with no separate compute charge.","tier":"M","src":["nJMwXtD56mA"]},{"text":"Cloud routines get an effort picker (v2.1.312); cloud sessions and Remote Control can be gated by Enterprise custom roles (v2.1.310).","tier":"P","src":["cc-changelog"]}]},{"area":"Claude Tag (Slack)","items":[{"text":"Claude in a team channel: remembers channel instructions, works from its own accounts, logs every change, asks permission before acting on your behalf; Team and Enterprise.","tier":"OV","src":["_f_rtbW_uFM"]},{"text":"Changelog adds Slack Connect channels (off by default), Allow once/Deny cards, `!fast`, analytics and spend limits; API beta for Tag settings 2026-10-23.","tier":"P","src":["cc-changelog","api-release-notes"]}]},{"area":"Desktop and apps (descriptions only)","items":[{"text":"Chat and Cowork merged into one Claude; Docs, Slides, Design out of beta on all plans including Free (10-19); Dashboards (beta, paid plans) and Motion (beta, Team/Enterprise); Claude Duet (see the Grok section B).","tier":"M","src":["n9WfoNW2XnE","_Ui4ZkYm4ho","Fb-68zqcSVs"]}]},{"area":"API and platform","items":[{"text":"API version 2026-10-21; SDK majors Python 2.0.0, TypeScript 1.0.0, Go 2.0.0, Java 3.0.0, C# 13.0.0, PHP 1.0.0, Ruby 2.0.0, ant CLI 2.0.0; breaking changes independent of API version; licence Apache 2.0 instead of MIT.","tier":"P","src":["api-release-notes"]},{"text":"Managed Agents: dynamic workflows (beta, `managed-agents-2026-04-01`, 10-09); scheduled deployments on Claude Platform on AWS (10-14); `web_fetch` limited to URLs already in session context (10-07, anti-exfiltration); org-level web fetch off switch (10-20).","tier":"P","src":["api-release-notes"]},{"text":"User profiles (`/v1/user_profiles`) for per-customer enforcement; OpenTelemetry export beta (10-14); Admin API out of beta (09-30); Claude Models on Google Cloud (10-22); Max and Team plans now include monthly API credits (10-07).","tier":"P","src":["api-release-notes"]}]}],"workflows":[{"text":"Adversarial review, then a judge. Spin off several Claude threads whose only task is to prove the work wrong, then use another Claude to validate the criticisms; prefer hard outside evidence, because \"the current session\" is a poor judge of its own work. Rieseberg describes running it in Projects with five threads.","tier":"SV-a","src":["D-SVFneJ_Nk"]},{"text":"Verification evidence on every PR. Claude does a first-pass review that exercises the change like a user (browser, end-to-end, linting); edit hooks study diffs; team taste lives in CLAUDE.md/AGENTS.md; humans check the agent's evidence (screenshots, video).","tier":"SV-a","src":["AnsXWH2_EBU"]},{"text":"Give Claude raw data and tools, not curated slices, and document tools well; \"model experience\" as a design test. Rieseberg's own caution: upfront setup cost is real.","tier":"SV-a","src":["D-SVFneJ_Nk"]},{"text":"Be sparing with skills. Rieseberg says Anthropic's official guidance is to be careful because a skill's usefulness decays fast, and removing a skill can improve output; most useful where you have an eval.","tier":"SV-a","src":["D-SVFneJ_Nk"]},{"text":"Projects economics: coordinator on low effort, threads on a smaller model, switch up for hard tasks; Projects burn plan limits faster than one session.","tier":"OV","src":["omihvjf0A2k"]},{"text":"Sandbox plus auto mode instead of yes/no prompts. Cherny: prompts became \"security theater\"; a second model without conversation context judges each command. The sandbox is opt-in in Claude Code and on by default in Cowork.","tier":"SV-h","src":["djDt8J2_YVs"]},{"text":"One shared company agent in Slack instead of one agent per person, built on Managed Agents (sandboxes, memory, session control); agent acts as a separate entity but on the requester's behalf for tool calls. Guests are Every staff, not Anthropic.","tier":"OV","src":["z7cNbsr3b5s"]}],"tools":[{"text":"Claude-native: Claude Tag, Mods, Claude Code Projects, Claude Duet, Claude for Google Workspace (details not fetched), Claude in Chrome (many v2.1.2xx fixes).","tier":"P","src":["idJQMJwHtyM","cc-changelog"]},{"text":"Adjacent: Every Agent (Slack agent on Managed Agents); Sonar verification layers; Stripe Link, cited by Krieger as a model for agent purchase approvals, not an integration.","tier":"OV","src":["z7cNbsr3b5s","AnsXWH2_EBU","ZkDRXs_LvWw"]},{"text":"Not counted: Dig AI is a sponsor read inside D-SVFneJ_Nk. \"Muse\" and \"Instinct\" and a \"model hardware standard\" are named by Krieger; none appears in the primary files, and the spellings are caption-uncertain.","tier":"unverified","src":["D-SVFneJ_Nk","ZkDRXs_LvWw"]}],"github":{"window":"Repos created on or after 2026-09-15; 7 queries; 235 unique repos; shortlist 8. READMEs skimmed, nothing installed.","rows":[{"repo":"tamaratran/fast-jev-compaction","stars":7795,"age_days":41,"licence":"MIT","what":"Pre-compact plugin using TypeSafe \"Jev\" API","windows":"Node plugin, untested","leaves":"Full transcript to TypeSafe; `TYPESAFE_API_KEY`","overlap":"pre-compact.sh","verdict":"watch"},{"repo":"dzhng/jevgrep","stars":3062,"age_days":32,"licence":"MIT","what":"Code search","windows":"Yes (Node 22+)","leaves":"Code snippets; Vercel/TypeSafe/OpenRouter key","overlap":"none","verdict":"skip"},{"repo":"yetone/magpie","stars":25219,"age_days":35,"licence":"MIT","what":"Local gateway routing to other providers, account rotation on quota","windows":"Yes","leaves":"Traffic routed to other providers","overlap":"none","verdict":"watch (ToS risk)"},{"repo":"QingYunA/answer-me-with-html","stars":4636,"age_days":26,"licence":"MIT","what":"Skill returning offline HTML answers","windows":"Skill, likely","leaves":"None stated","overlap":"Artifact tooling","verdict":"try"},{"repo":"t3dotgg/tstack","stars":2339,"age_days":4,"licence":"MIT","what":"Skill pack; council skill calls 3 other providers","windows":"Skills","leaves":"Prompts to 3 providers","overlap":"code-reviewer agent","verdict":"watch (4 days old)"},{"repo":"MaryCache/imozuru","stars":1368,"age_days":15,"licence":"MIT","what":"Citation-chasing research skill (JP-first, README.en exists)","windows":"Yes (PowerShell documented)","leaves":"Web search, PDFs","overlap":"youtube-research cmd","verdict":"try"},{"repo":"ruc-datalab/EvoOntology","stars":1090,"age_days":43,"licence":"MIT","what":"Data-agent research MCP (arXiv 2609.15779)","windows":"Unknown","leaves":"MCP traffic","overlap":"duckdb MCP","verdict":"watch"},{"repo":"YeonwooSung/my-claude-code-mods","stars":1099,"age_days":19,"licence":"Apache-2.0","what":"Context-inspector and agent-profiler mods","windows":"Unknown","leaves":"OTLP only if configured","overlap":"cost-tracker.sh","verdict":"try"}],"anomalies":[{"text":"Star counts are unreliable: Gathin23/cleanyourtv 44,803 stars at 11 days (licence \"other\"), magpie 25k at 35 days, lemo-opuscar 9.3k, universal-modder 9.2k. Likely inflation or promotion.","tier":"unverified","src":["github"]},{"text":"Claude-Guardian (1,265 stars, GPL-3, ban-evasion text) and Folkbench (API relay ranking): skip.","tier":"unverified","src":["github"]},{"text":"Jakeschincariol owns 6 of the top 40 (identical 11-skill packs): serial-publisher pattern.","tier":"unverified","src":["github"]},{"text":"The \"Jev\"/TypeSafe cluster (fast-jev-compaction, jevgrep, hermes-jev-skills) looks like coordinated promotion of one vendor.","tier":"unverified","src":["github"]}]},"applications":[{"text":"Cherny: 12-hour data-analysis sessions launching about 10 parallel agents; a Cowork run that obtained a clamming licence in about 30 minutes.","tier":"SV-h","src":["djDt8J2_YVs"]},{"text":"Krieger's Labs \"Hatch\" (builder plus adversarial verifier agents, months of harnessing) was outperformed by Fable 5.1 with only dynamic workflows. His point: hold product shapes lightly.","tier":"SV-a","src":["ZkDRXs_LvWw"]},{"text":"Every's \"Kate pass\": a skill built from 30,000 historical edits, applied as suggested edits in Google Docs.","tier":"OV","src":["z7cNbsr3b5s"]},{"text":"The AnsXWH2_EBU title cites 30,000 merges a day at Anthropic, attributed to an Anthropic post that is not in the newsroom list. Unverified.","tier":"unverified","src":["AnsXWH2_EBU"]}],"pricing":[{"item":"Haiku 5.5","change":"$0.10 in / $0.50 out per MTok (prompts up to 100K); $0.50 / $2.50 above; cache read $0.01 / $0.05, write $0.125 / $0.625; vs Haiku 4.5 $1 / $5 and Sonnet 5.5 $2 / $10","tier":"P","src":["newsroom"]},{"item":"Sonnet 5.5 cache read","change":"$0.20 to $0.10 per MTok (Claude Code `/cost` updated, v2.1.296)","tier":"P","src":["api-release-notes","cc-changelog"]},{"item":"Opus 5.5 fast mode","change":"Out of research preview; $8 / $40 per MTok (price from the vendor summary of claude.com/pricing)","tier":"P","src":["api-release-notes","grok-vendor"]},{"item":"Limits","change":"Usage messages renamed \"5-hour limit\" (v2.1.312); resume warning on Pro/Max when a stale conversation would use a noticeable share of the 5-hour limit (v2.1.304); standard-context sessions that exceed 200K tokens now compact instead of stopping on \"Usage credits required for 1M context\" (v2.1.311)","tier":"P","src":["cc-changelog"]}],"pricing_note":{"text":"Cherny says Opus 5.5 efficiency allowed price cuts and higher Pro/Max limits; no primary file in this sweep shows an Opus price change, so that is unconfirmed here.","tier":"unverified","src":["djDt8J2_YVs"]},"consensus_shifts":{"note":"n/a: no prior baseline report.","items":[]},"contradictions":{"note":"No prior baseline report, so nothing retired against a baseline. Within-window contradictions between sources:","items":[{"claim":"Auto mode is on by default in every Claude Code session (Krieger).","status":"retired","text":"The changelog says sessions with no permission mode start in `default` on third-party providers, telemetry-off or fresh installs (v2.1.302), reversing v2.1.285. Primary source wins: treat \"on by default everywhere\" as wrong, or at best true for some plans.","tier":"P","src":["ZkDRXs_LvWw","cc-changelog"]},{"claim":"Claude Code prompt-injection success rate is \"zero\" (Cherny).","status":"flagged","text":"Because none could be demonstrated in a one-week bounty. Staff claim with no primary support in these files; the same sentence concedes vulnerabilities \"probably still exist\".","tier":"SV-h","src":["djDt8J2_YVs"]},{"claim":"Model names and surnames in auto-captioned talks.","status":"note","text":"\"Opus 55\" in the auto-captions is read as Opus 5.5; speaker surnames are garbled.","tier":"SV-a","src":["D-SVFneJ_Nk","AnsXWH2_EBU","ZkDRXs_LvWw"]}]},"grok":{"mapping":"\"Grok bot\" currently means: Grok Bot, an always-on agent product (beta since 2026-08-11; `@bot` on X), per x.ai/news/introducing-grok-bot and docs.x.ai/grok-bot/overview. X users also lump in Grok Build (agent CLI, early beta 2026-05-25, open-sourced 2026-07-15), the Grok 4.7 model (2026-09-21), and Cursor-hosted use (Cursor is reported to be part of xAI's parent; deal terms unverified). No xAI-owned IDE found.","unverified":[{"text":"xAI pages and staff now call the company \"SpaceXSI\"/\"SpaceXAI\". The files record that wording in an x.ai guide and footer, but the fetches were summarised by a small model, so the report uses \"xAI\".","tier":"unverified","src":["grok-vendor"]},{"text":"Grok Bot routes tasks to Claude Opus 5.5 (a Musk post about 2026-10-07, secondary reports only; xAI docs do not confirm).","tier":"unverified","src":["grok-vendor"]}],"tier_key":"Fetches were summarised by a small model; every number below was checked against the file text.","pairings":[{"id":"A","title":"Grok Build vs Claude Code (coding CLI and agent)","columns":["Dimension","Claude Code","Grok Build","Tier","Source + date"],"tier_col":3,"rows":[["Agent product and surfaces","Terminal CLI, VS Code, JetBrains, Desktop, Web, Slack","Terminal TUI, headless `-p`, ACP editors; \"1.0\" Aug 2026 per third-party only","vendor","code.claude.com overview; x.ai/news/grok-build-cli, docs.x.ai/build/overview; 2026-10-29"],["Current models","Fable 5.1; Opus 5.5 (09-22); Sonnet 5.5 (09-28); Haiku 5.5 (10-07)","Grok 4.7 (09-21); grok-build-0.1 (256k, May); Fast variant only in Cursor and Build","vendor","anthropic.com/news; docs.x.ai release notes"],["Coding benchmarks","WebDev Arena (models only, no harness): Opus 5.5 (Max) 1810 rank 1; Sonnet 5.5 (xHigh) 1770 rank 3. Terminal-Bench 4.0 (mirror, unverified): Opus 5.5 + Claude Code, max, 64.8% (as of 10-17). Artificial Analysis: Opus 5.5 (Max) Index 58","WebDev Arena: Grok 4.7 (xHigh) 1637 rank 21. Terminal-Bench 4.0 (mirror, unverified): Grok 4.7 + Grok Build, xhigh, 37.58% (board date 09-21). Artificial Analysis: Grok 4.7 (xhigh) Index 34 (a relay says 46: unresolved)","independent","arena.ai/leaderboard/webdev \"Last updated Oct 27, 2026\"; tbench.ai returned no rows; Presenc.ai, DevelopersDigest; artificialanalysis.ai (no page dates)"],["Price","API $/MTok in/out: Fable 5.1 10/50; Opus 5.5 4/20; Sonnet 5.5 2/10; Haiku 5.5 0.10/0.50 (up to 100K). Pro $20/mo; Max from $100; no numeric limits published","Grok 4.7 2/6 (below 200K prompt; cached 0.50), 4/12 above; grok-build-0.1 1/2. SuperGrok about $30/mo and Heavy $300/mo (third-party, not confirmed on an xAI page). Rate limits: no numbers found","vendor","claude.com/pricing; docs.x.ai/docs/models; 2026-10-29"],["Context window","1M for Haiku 5.5 (API notes); Opus 4.7+/Sonnet 5+/Fable use 1M by default behind gateways and on Bedrock/Vertex/Foundry (v2.1.285, v2.1.287); Anthropic-API default not stated in the files","Grok 4.7 500k; grok-build-0.1 256k; 4.3 and 4.20 variants 1M","vendor","api-release-notes.md, cc-changelog.md; docs.x.ai"],["Agent features","Subagents, skills, hooks, MCP, mods, Agent SDK, `/schedule`, `/loop`; reads AGENTS.md","AGENTS.md, plugins, hooks, skills, MCP, plan mode, parallel-worktree subagents. Scheduling: not found. Reads CLAUDE.md: not confirmed","vendor","as above"],["Windows","Native PowerShell/CMD installers, WinGet; Git for Windows recommended; Desktop x64 and ARM64; Windows hook fixes in this window","Native PowerShell installer (`irm https://x.ai/cli/install.ps1 | iex`), `%USERPROFILE%\\.grok\\config.toml`","vendor","code.claude.com; docs.x.ai/build/overview"],["Data use and retention","Consumer: trains if setting on, 5-year retention, off = 30 days. Commercial: no training, 30 days, ZDR on request","xAI's own training and retention terms for Grok Build: not found","vendor","code.claude.com/docs/en/data-usage"],["How insiders use it","Cherny: all surfaces, hundreds of agents a day typical, \"all of our products are built using Claude Code\"; Osmani: first-pass Claude review plus edit hooks","No Grok Build insider found; Lingxi Li's workflow centres on Bot and Cursor agents","affiliated","djDt8J2_YVs, AnsXWH2_EBU; x.ai/bot/guides (2026-09-10)"],["What X is saying","Claude limit complaints","Grok Build weekly pool called generous by promoters (pre-window); some burned a SuperGrok week in 2-3 hours; hybrid \"Claude plans, Grok CLI writes\" (pre-window)","sentiment","WebSearch snippets; x.com fetches returned 403"]]},{"id":"B","title":"Grok Bot vs Claude's always-on agent products","note":"Grok Bot has no independent benchmark; no performance ranking is offered. Rows are vendor descriptions unless marked.","columns":["Dimension","Grok Bot","Claude Tag","Cloud sessions / Projects / routines","Claude Duet","Managed Agents"],"tier_col":null,"rows":[["What it is","Always-on \"teammates\" with a persistent cloud computer (browser, files, terminal), routines, Pages (2026-10-21, per Bot's X post)","Claude as a multiplayer teammate inside a Slack channel","Claude Code sessions on a cloud VM; Projects coordinates threads on branches","Phone app: Claude brings what needs attention, checks before acting for you","API for building your own agents (sandboxes, memory, sessions)"],["Where it lives","Chat UI, desktop app (Windows x64/Arm64), `@bot` on X","Slack","Claude app/web/phone to cloud VM","Phone","Your product (e.g. Every Agent in Slack)"],["Persistence and autonomy","Persistent machine; scheduled routines","Keeps working while you move on; Cherny: schedules its own check-ins (e.g. 12 h later)","Continues after the laptop closes; parallel threads; PR watching; daily routines","Keeps working after you put the phone down","Durable sessions and memory; dynamic workflows (beta 10-09); scheduled deployments (AWS)"],["Acting on your behalf and approval","One shared machine, files and logins for all of an account's Bots; sentiment says \"Always Allow\" removes the approval gate","Acts from its own accounts, logs every change; asks permission each time it responds as you; Allow once/Deny cards","Plan limits apply; permission modes and auto mode as in Claude Code","\"Checks before acting on your behalf\" (description only)","Org web-fetch controls; per-customer user profiles; Every: acts as you for tool calls"],["Plans, availability, pricing","SuperGrok/Plus/Heavy, Cursor Pro/Pro+/Ultra, Teams; Enterprise waitlist; docs conflict on whether usage is separate or a shared weekly pool","Team and Enterprise","Pro/Max/Team/Enterprise premium seats; Projects beta for Pro/Max; no separate compute charge","Research preview, waitlist, Pro/Max, US only","API usage; price not found in files"],["Data and retention","Runs through Cursor's servers; Privacy Mode on = not used for training; deletion within 30 days after service end; Action Recording 90 days (Enterprise)","Not found","Claude Code terms above","Not found","Not found"],["How insiders use it","Lingxi Li (SpaceXSI per page; 2026-09-10): five engineer Bots, 30-min loop over a Notion PR database, nightly audits, P0 transcript check every 5 min (token heavy). John Bai (design, 2026-08-24). Vendor-hosted, promotional, both pre-window","Krieger: Tag used \"extensively\" inside Anthropic, including a \"decisions waiting\" digest; Rieseberg recommends Tag as the team feedback agent; Cherny: first product merging coding and non-coding","Cherny: sessions across desktop, Slack, terminal, phone","Not found","Every (customer)"],["Sentiment","Different category from Claude Code; enthusiasts say Bot replaces Claude Code; shared-machine trust concerns; limits dominate","Not collected","Not collected","Not collected","Not collected"]]}],"changed":"First comparison.","contradicted":"None found. Unresolved vendor-versus-vendor gaps: Terminal-Bench 4.0 for Fable 5.1 is 57.9 in xAI's table but 55.8 in Anthropic's, and xAI's 57.9 equals the figure Anthropic gives GPT-6 Astra; Artificial Analysis Grok 4.7 Index 34 versus a relay's 46. Anthropic's 66.4% (xhigh) vs the 64.8% mirror (max) is within stated error; xAI's 37.6 vs the 37.58 board entry is consistent. CursorBench is not neutral for xAI because Cursor is reported to be part of its parent.","bottom_line":"On the one clean independent head-to-head (LMArena WebDev, 2026-10-27, models only) Claude Opus 5.5 leads Grok 4.7 by 173 points; Terminal-Bench points the same way but rests on mirrors, different harnesses and efforts, so the report does not rank it. Both CLIs ship native Windows installers, but Claude Code has documented data terms and a run of Windows hook fixes in this window, while Grok Build's data terms were not found; Grok Bot is a general always-on work agent with no independent benchmark, and its nearest Claude equivalents (cloud sessions with routines, Tag, Duet) differ in tier and availability, so for solo local Python/R/.qmd work on Windows nothing in tier 1-2 evidence argues for switching from a local Claude Code session (inference)."},"roster_changes":[{"name":"Felix Rieseberg","change":"Update evidence to 2026-10-20; promote to `current`","evidence":"D-SVFneJ_Nk (49 min, Silicon Valley Girl; states he leads engineering for Claude)"},{"name":"Boris Cherny","change":"Update evidence to 2026-09-26; `current`","evidence":"djDt8J2_YVs (CHM Live; published before the window)"},{"name":"Mike Krieger","change":"Update evidence to 2026-10-06; `current`","evidence":"ZkDRXs_LvWw (Sierra CXO Summit; Anthropic Labs)"},{"name":"Addy Osmani","change":"Update evidence to 2026-10-28; `current`","evidence":"AnsXWH2_EBU (AI Engineer; says he recently joined Anthropic to own Claude Code developer experience). Passed speaker verification directly"},{"name":"Katelyn Lesse (Head of Platform Engineering)","change":"New candidate","evidence":"z7cNbsr3b5s (name from the video description checked during verification; the transcript text does not name the host)"},{"name":"Lydia (Mods video)","change":"New candidate; surname needed","evidence":"yUuFvL1lK4k; first name only"},{"name":"Doug (Claude Docs video)","change":"New candidate; surname needed","evidence":"N9TUbGO6Kr4; \"Doug (product engineer, Anthropic)\" [M]"},{"name":"Nate (designer, Claude Design video)","change":"New candidate; surname needed","evidence":"COJAZQM1aeQ; [M]"},{"name":"Barry Zhang, Mahesh Murag; Alex Albert","change":"No change","evidence":"Only re-clips of a December 2025 talk; a Vietnamese dub calls Albert a \"research PM\" (unverified)"},{"name":"Thariq Shihipar","change":"Departed 2026-10-24 (already recorded)","evidence":"n/a"}],"sources_table":[{"id":"D-SVFneJ_Nk","title":"Claude Engineering Lead: Stop Using Claude Like It's 2024","channel":"Silicon Valley Girl","speaker":"Felix Rieseberg","date":"2026-10-20","strength":"Staff talk, auto-captioned","tier":"SV-a"},{"id":"AnsXWH2_EBU","title":"How Anthropic Merges 30,000 Code Changes a Day","channel":"AI Engineer","speaker":"Addy Osmani (with Manish Kapoor, Sonar)","date":"2026-10-28","strength":"Staff talk, auto-captioned","tier":"SV-a"},{"id":"djDt8J2_YVs","title":"CHM Live | Anthropic's Boris Cherny, Creator of Claude Code","channel":"Computer History Museum","speaker":"Boris Cherny","date":"2026-09-26","strength":"Staff talk, human captions (published before the window)","tier":"SV-h"},{"id":"ZkDRXs_LvWw","title":"Sierra CXO Summit: Lessons Learned at the Frontier with Anthropic Labs' Mike Krieger","channel":"SIERRA Ventures","speaker":"Mike Krieger","date":"2026-10-06","strength":"Staff talk, auto-captioned","tier":"SV-a"},{"id":"omihvjf0A2k","title":"Getting started with Claude Code Projects","channel":"Claude","speaker":"Unnamed narrator","date":"2026-10-09","strength":"Official channel (captions flagged auto-generated)","tier":"OV"},{"id":"z7cNbsr3b5s","title":"Building secure agents for knowledge work","channel":"Claude","speaker":"Katelyn Lesse (per description) with Every staff","date":"2026-10-06","strength":"Official channel","tier":"OV"},{"id":"yUuFvL1lK4k","title":"Mods in Claude Code: change how Claude Code works","channel":"Claude","speaker":"Lydia (first name only)","date":"2026-10-05","strength":"Official channel","tier":"OV"},{"id":"_f_rtbW_uFM","title":"Getting started with Claude Tag","channel":"Claude","speaker":"Unnamed narrator","date":"2026-09-29","strength":"Official channel","tier":"OV"}],"sources_note":"Metadata only (under 3 minutes, descriptions only): N9TUbGO6Kr4, Fb-68zqcSVs, _Ui4ZkYm4ho, nJMwXtD56mA, n9WfoNW2XnE, iFHsEHP437U, COJAZQM1aeQ, NzcRprKWbD8 / bVXiNb9RyyI, idJQMJwHtyM. Excluded as not staff-speaking: N6FkmdL0Lg0 (Factory customer story), 9GtcbnmldcY (Shopify CTO).","methodology":["Official channels (2.1): Claude channel 22 uploads in window (about 15 unique after aspect-ratio duplicates); Anthropic channel 0 (latest 2026-09-23).","Staff searches (2.2): four batched roster searches (16 names, 65 results, about 500 quota units). 1 passed speaker verification directly (Addy Osmani); 3 originals were recovered by tracing commentary to its source (Rieseberg, Cherny, Krieger). About 61 dropped: commentary or reaction videos, re-clips of a December 2025 Zhang/Murag talk, Shorts, name collisions (Adam Wolff church services, an unrelated Alex Albert, Krieger Instagram-history videos). Search dates not recorded in the inputs.","Filters: videos under 3 minutes used as metadata only. Step 8 playlist skipped. Transcripts 8 of 8 downloaded, 3 auto-captioned; sponsor reads in D-SVFneJ_Nk ignored.","Primary sources: newsroom 19 posts (index summaries plus the Haiku 5.5 launch page); API release notes 15 dated headings, 37 bullets; changelog v2.1.285-v2.1.312 read in full (1,881 lines).","GitHub: window start 2026-09-15; 7 queries; 235 unique repos; shortlist 8.","Grok: xAI pages per grok/vendor.md (Bot overview/security/FAQ, grok-build-cli, grok-build-open-source, build overview, grok-4-7, models, release notes; x.ai/build/changelog returned 403). Leaderboards: LMArena WebDev (page dated 2026-10-27); tbench.ai returned no rows, so two mirrors (as of 10-01 and 10-17); Artificial Analysis (no page dates); swebench.com did not render. X pages returned 403; no login. Affiliated items: 2 counted (both SpaceXSI per page text, both pre-window), 5 not counted. Sentiment: 7 themes from search snippets, many pre-window. Number of searches not recorded. Fetches were summarised by a small model."]}}</script>
+<script>/* Theme toggle only. Everything else is rendered at build time. */
+(function () {
+  var btn = document.getElementById("theme");
+  if (!btn) return;
+  function apply(mode) {
+    document.documentElement.setAttribute("data-theme", mode);
+    btn.textContent = mode === "dark" ? "Light" : "Dark";
+    try { localStorage.setItem("claude-trends-theme", mode); } catch (e) { /* private mode */ }
+  }
+  var saved = null;
+  try { saved = localStorage.getItem("claude-trends-theme"); } catch (e) { /* ignore */ }
+  apply(saved === "light" ? "light" : "dark");
+  btn.addEventListener("click", function (ev) {
+    ev.preventDefault();
+    apply(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
+  });
+})();
+</script>
+</body>
+</html>
