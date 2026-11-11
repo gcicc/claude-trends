@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{% endblock %}</title>
+<meta name="description" content="{% block description %}{% endblock %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>{{ styles | safe }}</style>
+<link rel="stylesheet" href="https://gcicc.github.io/suite/network.css">
+<script src="https://gcicc.github.io/suite/network.js" data-section="claude-trends" data-built="{{ generated }} UTC" data-next="on demand (/claude-trends)" defer></script>
+</head>
+<body>
+<noscript><p style="margin:0;padding:.5rem 1rem"><a href="https://gcicc.github.io/suite/">RANGE — all sections</a></p></noscript>
+<header class="bar">
+  <h1>Claude Trends</h1>
+  <span class="sub">{% block sub %}{% endblock %}</span>
+{% block bus %}{% endblock %}
+  <nav>
+{% block nav %}{% endblock %}
+    <a href="#" id="theme" role="button">Light</a>
+  </nav>
+</header>
+<main>
+{% block main %}{% endblock %}
+</main>
+<footer>
+{% block footer %}{% endblock %}
+</footer>
+{% block payload %}{% endblock %}
+<script>{{ app | safe }}</script>
+</body>
+</html>

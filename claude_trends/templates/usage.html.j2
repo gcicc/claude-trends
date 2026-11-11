@@ -1,0 +1,90 @@
+{% extends "base.html.j2" %}
+{% import "macros.html.j2" as m with context %}
+{% block title %}Usage review (local) — Claude Trends — RANGE{% endblock %}
+{% block description %}Local-only review of how Claude Code is used, measured from session transcripts. Never published.{% endblock %}
+{% block sub %}usage review · window since {{ u.window_since }} · LOCAL ONLY{% endblock %}
+{% block nav %}
+    <a href="#measured">Measured</a>
+    <a href="#commitments">Commitments</a>
+    <a href="#coaching">Coaching</a>
+    <a href="../docs/index.html">Trends</a>
+{% endblock %}
+{% block main %}
+<div class="meta">
+  <div class="label">Local only — contains your prompts' statistics; gitignored, never linked from the public page</div>
+  <div class="date">{{ u.prompts }} prompts</div>
+  <p class="headline">{{ u.sessions }} sessions since {{ u.window_since }}; transcripts on disk reach back to {{ u.files_oldest }} ({{ u.files_scanned }} files scanned).</p>
+  <div class="facts">
+    <span>generated <b>{{ u.generated }}</b></span>
+    <span>slash commands typed <b>{{ view.slash_total }}</b></span>
+    <span>interruptions <b>{{ u.interruptions }}</b></span>
+  </div>
+</div>
+
+<section id="measured">
+  {{ m.head('Measured vs August baseline', '', 'baseline: WORKING-WITH-GREG §5') }}
+  {{ m.table(['Signal', 'Now', 'Aug 2026', 'Reading'], view.measured) }}
+</section>
+
+<section id="commitments">
+  {{ m.head('Commitments board', view.commitments | length ~ ' tracked', '“If these numbers don’t fall, this document didn’t work.”') }}
+  <div class="rack">
+  {% for c in view.commitments %}
+    <div class="strip t-{{ 'P' if c.status == 'met' else ('unverified' if c.status == 'worse' else 'M') }}">
+      <div class="what"><span class="badge">TRACKED</span><span class="badge {{ c.status | replace(' ', '-') }}">{{ c.status }}</span><b>{{ c.label }}</b><br><span class="small">target: {{ c.target }} · now: {{ c.now }}{% if c.n %} · n={{ c.n }}{% endif %}{% if c.thin %} · thin sample{% endif %}</span></div>
+      <div class="who">{{ c.source }}</div>
+    </div>
+  {% endfor %}
+  </div>
+</section>
+
+<section id="slash">
+  {{ m.head('Slash commands', view.slash | length ~ ' typed') }}
+  {{ m.table(['Command', 'Typed', 'Installed'], view.slash) }}
+  <p class="note">Installed commands never typed: {{ view.unused_commands | join(', ') or 'none' }}</p>
+</section>
+
+<section id="skills">
+  {{ m.head('Skills used vs unused', view.skills_used | length ~ ' of ' ~ u.inventory.skills | length ~ ' invoked') }}
+  {{ m.table(['Skill', 'Invoked by Claude'], view.skills_used) }}
+  <p class="note">Never invoked ({{ u.unused_skills | length }}): {{ u.unused_skills | join(', ') or 'none' }}</p>
+</section>
+
+<section id="rejections">
+  {{ m.head('Tool rejections') }}
+  {{ m.table(['Tool', 'Rejected', 'Calls', 'Rate'], view.rejections) }}
+</section>
+
+<section id="subagents">
+  {{ m.head('Subagent models and types') }}
+  {{ m.table(['Model', 'Spawns'], view.subagent_models) }}
+  <h3>By type</h3>
+  {{ m.table(['Type', 'Spawns'], view.subagent_types) }}
+</section>
+
+<section id="coaching">
+  {{ m.head('Coaching', '', 'Step 9 of /claude-trends writes data/usage/coaching.json') }}
+  {% if not view.coaching_present %}
+  <div class="empty">No coaching file yet. Run <code>/claude-trends</code> through Step 9 to fill the four sections below.</div>
+  {% endif %}
+  {% for sec in view.coaching %}
+  <h3>{{ sec.title }}</h3>
+  {% if sec['items'] %}
+  <div class="rack">
+    {% for it in sec['items'] %}
+    <div class="strip t-{{ 'P' if it.evidence_count else 'M' }}">
+      <div class="what">{{ it.text | md }}<br><span class="small">action: {{ it.action | md }}</span></div>
+      <div class="who">evidence ×{{ it.evidence_count }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty">{{ sec.placeholder }}</div>
+  {% endif %}
+  {% endfor %}
+  <p class="note">Rule and doc changes are proposed, never auto-applied.</p>
+</section>
+{% endblock %}
+{% block footer %}
+  <div>CLAUDE TRENDS — usage review, built {{ generated }} UTC. Local only: this page is gitignored and must never be published.</div>
+{% endblock %}

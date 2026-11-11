@@ -1,0 +1,159 @@
+{% extends "base.html.j2" %}
+{% import "macros.html.j2" as m with context %}
+{% block title %}Claude Trends — RANGE{% endblock %}
+{% block description %}What changed in how people use Claude, from Anthropic primary sources, official channels and staff talks, graded by evidence tier. Run {{ run.meta.date }}.{% endblock %}
+{% block sub %}delta sweep {{ run.meta.date }} vs {{ run.meta.baseline }}{% endblock %}
+{% block bus %}
+  <div class="bus" aria-label="Source status">{% for s in run.sources %}<span class="{{ s.status }}"><i class="dot {{ s.status }}"></i>{{ s.name }}</span>{% endfor %}</div>
+{% endblock %}
+{% block nav %}
+    <a href="#summary">Summary</a>
+    <a href="#features">Features</a>
+    <a href="#retired">Retired</a>
+    <a href="#grok">Grok</a>
+    <a href="#history">History</a>
+{% endblock %}
+{% block main %}
+{% set S = run.sections %}
+<div class="meta">
+  <div class="label">Latest sweep</div>
+  <div class="date">{{ run.meta.date }}</div>
+  <p class="headline">{{ run.meta.headline }}</p>
+  <div class="facts">
+    <span>baseline <b>{{ run.meta.baseline }}</b></span>
+    <span>videos <b>{{ run.meta.videos }}</b></span>
+    <span>changelog <b>v{{ run.meta.changelog['from'] }}–v{{ run.meta.changelog.to }}</b></span>
+    <span>sources ok <b>{{ run.sources | selectattr('status', 'equalto', 'ok') | list | length }}/{{ run.sources | length }}</b></span>
+  </div>
+  <div class="legend" aria-label="Evidence tiers">
+    <span><i class="t-P"></i>primary / independent</span>
+    <span><i class="t-OV"></i>official or human-captioned video</span>
+    <span><i class="t-SV-a"></i>auto-captioned / vendor</span>
+    <span><i></i>metadata / affiliated / sentiment</span>
+    <span><i class="t-unverified"></i>unverified</span>
+  </div>
+</div>
+
+<section id="summary">
+  {{ m.head('Executive summary', S.exec_summary | length ~ ' items') }}
+  {{ m.items(S.exec_summary) }}
+</section>
+
+<section id="sources-bus">
+  {{ m.head('Source bus', run.sources | length ~ ' sources', 'fetched ' ~ run.meta.date) }}
+  <div class="rack">
+  {% for s in run.sources %}
+    <div class="strip {{ 't-unverified' if s.status == 'failed' else 't-P' }}">
+      <div class="what"><span class="badge {{ s.status }}">{{ s.status }}</span><b>{{ s.name }}</b> <span class="small">{{ s.note }}</span></div>
+      <div class="who">{{ s.fetched_at }}</div>
+    </div>
+  {% endfor %}
+  </div>
+</section>
+
+<section id="history" class="rail">
+  {{ m.head('Run history', history | length ~ ' reports') }}
+  <div class="rack">
+  {% for h in history %}
+    <a class="strip {{ 'next' if h.date == run.meta.date }}" href="{{ h.href }}">
+      <div class="what"><span class="when">{{ h.date }}</span> · {{ h.label }} — {{ h.summary | md }}</div>
+      <div class="who">{{ 'current' if h.date == run.meta.date else ('legacy .md' if h.legacy else '.md') }}</div>
+    </a>
+  {% endfor %}
+  </div>
+</section>
+
+<section id="features">
+  {{ m.head('New features and releases') }}
+  {% for g in S.features %}
+  <h3>{{ g.area }}</h3>
+  {{ m.items(g['items']) }}
+  {% endfor %}
+</section>
+
+<section id="workflows">
+  {{ m.head('New workflow patterns') }}
+  {{ m.items(S.workflows) }}
+</section>
+
+<section id="tools">
+  {{ m.head('New tools, MCPs, integrations') }}
+  {{ m.items(S.tools) }}
+</section>
+
+<section id="github">
+  {{ m.head('New on GitHub') }}
+  <p class="note">{{ S.github.window }}</p>
+  {% set gh_rows = [] %}
+  {% for r in S.github.rows %}{% set _ = gh_rows.append([r.repo, '{:,}'.format(r.stars), r.age_days, r.licence, r.what, r.windows, r.leaves, r.overlap, r.verdict]) %}{% endfor %}
+  {{ m.table(['Repo', 'Stars', 'Age (d)', 'Licence', 'What it does', 'Windows?', 'What leaves the machine', 'Overlap', 'Verdict'], gh_rows) }}
+  <h3>Anomalies</h3>
+  {{ m.items(S.github.anomalies) }}
+</section>
+
+<section id="applications">
+  {{ m.head('Notable applications') }}
+  {{ m.items(S.applications) }}
+</section>
+
+<section id="pricing">
+  {{ m.head('Pricing and cost shifts') }}
+  {% set pr = [] %}
+  {% for p in S.pricing %}{% set _ = pr.append([p.item, p.change, p.src | join(', ')]) %}{% endfor %}
+  {{ m.table(['Item', 'Change', 'Source'], pr) }}
+  {% if S.pricing_note %}<div class="rack" style="margin-top:2px">{{ m.item(S.pricing_note) }}</div>{% endif %}
+</section>
+
+<section id="retired" class="ledger">
+  {{ m.head('Retired-advice ledger', S.contradictions['items'] | length ~ ' entries') }}
+  <p class="note">{{ S.contradictions.note }}{% if S.consensus_shifts.note %} Consensus shifts: {{ S.consensus_shifts.note }}{% endif %}</p>
+  <div class="rack">
+  {% for c in S.contradictions['items'] %}
+    <div class="strip t-{{ c.tier }}">
+      <div class="what"><span class="badge {{ c.status }}">{{ c.status }}</span><span class="claim {{ c.status }}">{{ c.claim }}</span><br>{{ m.badge(c.tier) }}{{ c.text | md }}</div>
+      <div class="who">{{ c.src | join(' · ') }}</div>
+    </div>
+  {% endfor %}
+  </div>
+</section>
+
+<section id="grok">
+  {{ m.head('Grok vs Claude') }}
+  <p class="note">{{ S.grok.mapping | md }}</p>
+  <h3>Reported, not confirmed</h3>
+  {{ m.items(S.grok.unverified) }}
+  <p class="note">{{ S.grok.tier_key }}</p>
+  {% for p in S.grok.pairings %}
+  <h3>{{ p.id }}. {{ p.title }}</h3>
+  {% if p.note %}<p class="note">{{ p.note }}</p>{% endif %}
+  {{ m.table(p.columns, p.rows, p.tier_col) }}
+  {% endfor %}
+  <h3>Changed since last run</h3><p class="note">{{ S.grok.changed }}</p>
+  <h3>Vendor claims contradicted by independent sources</h3><p class="note">{{ S.grok.contradicted | md }}</p>
+  <h3>Bottom line for this work</h3><p class="note">{{ S.grok.bottom_line }}</p>
+</section>
+
+<section id="roster">
+  {{ m.head('Roster changes proposed', S.roster_changes | length ~ ' rows') }}
+  {% set rc = [] %}
+  {% for r in S.roster_changes %}{% set _ = rc.append([r.name, r.change, r.evidence]) %}{% endfor %}
+  {{ m.table(['Name', 'Proposed change', 'Evidence'], rc) }}
+</section>
+
+<section id="sources">
+  {{ m.head('Sources', S.sources_table | length ~ ' videos') }}
+  {% set st = [] %}
+  {% for v in S.sources_table %}{% set _ = st.append([v.id, v.title, v.channel, v.speaker, v.date, v.tier]) %}{% endfor %}
+  {{ m.table(['Video ID', 'Title', 'Channel', 'Speaker', 'Date', 'Tier'], st, 5) }}
+  <p class="note">{{ S.sources_note }}</p>
+</section>
+
+<section id="methodology">
+  {{ m.head('Methodology') }}
+  <ul class="plain">{% for t in S.methodology %}<li>{{ t | md }}</li>{% endfor %}</ul>
+</section>
+{% endblock %}
+{% block footer %}
+  <div>CLAUDE TRENDS — built {{ generated }} UTC from run {{ run.meta.date }}. Refreshed when the <code>/claude-trends</code> sweep runs, not on a schedule.{% if run.meta.report %} Full report: <a href="{{ run.meta.report }}">{{ run.meta.date }} delta (.md)</a>.{% endif %}</div>
+{% endblock %}
+{% block payload %}<script id="payload" type="application/json">{{ payload | safe }}</script>{% endblock %}

@@ -1,0 +1,29 @@
+{% macro badge(tier) %}<span class="badge {{ tier }}" title="{{ tiers.get(tier, '') }}">{{ tier }}</span>{% endmacro %}
+
+{% macro item(it) %}
+<div class="strip t-{{ it.tier }}">
+  <div class="what">{{ badge(it.tier) }}{{ it.text | md }}</div>
+  <div class="who">{{ it.src | join(' · ') }}</div>
+</div>
+{% endmacro %}
+
+{% macro items(list) %}<div class="rack">{% for it in list %}{{ item(it) }}{% endfor %}</div>{% endmacro %}
+
+{% macro table(columns, rows, tier_col=none) %}
+<table class="tbl">
+  <thead><tr>{% for c in columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+  <tbody>
+  {% for row in rows %}
+    <tr{% if tier_col is not none %} class="t-{{ row[tier_col] }}"{% endif %}>
+    {% for cell in row %}
+      <td data-label="{{ columns[loop.index0] }}">{% if tier_col is not none and loop.index0 == tier_col %}{{ badge(cell) }}{% else %}{{ cell | md }}{% endif %}</td>
+    {% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endmacro %}
+
+{% macro head(title, n='', stamp='') %}
+<div class="head"><h2>{{ title }}</h2>{% if n %}<span class="n">{{ n }}</span>{% endif %}{% if stamp %}<span class="stamp">{{ stamp }}</span>{% endif %}</div>
+{% endmacro %}
