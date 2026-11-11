@@ -12,7 +12,7 @@ house style, and give Greg a private measure of how he uses Claude Code, with co
    source), run-history rail listing every report in the index (legacy ones link to their `.md`),
    retired-advice ledger, Grok tables; works in light and dark.
 3. At 390 px width `scrollWidth == clientWidth` on both pages; no console errors.
-4. Both pages carry the RANGE chrome snippet with `data-section="claude-trends"`.
+4. Both pages carry the RANGER chrome snippet with `data-section="claude-trends"`.
 5. `docs/index.html` contains no string from `data/usage/` (pytest: fixture prompt text and
    coaching text absent; `usage.html` not linked).
 6. `local/` and `data/usage/` are gitignored; the repo has no remote.
