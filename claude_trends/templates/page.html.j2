@@ -154,6 +154,6 @@
 </section>
 {% endblock %}
 {% block footer %}
-  <div>CLAUDE TRENDS — built {{ generated }} UTC from run {{ run.meta.date }}. Refreshed when the <code>/claude-trends</code> sweep runs, not on a schedule.{% if run.meta.report %} Full report: <a href="{{ run.meta.report }}">{{ run.meta.date }} delta (.md)</a>.{% endif %}</div>
+  <div>CLAUDE TRENDS — built {{ generated }} UTC from run {{ run.meta.date }}. Refreshed when the <code>/claude-trends</code> sweep runs, not on a schedule.{% if run.meta.report %} Full report: <a href="{{ run.meta.report | replace('../', 'https://github.com/gcicc/claude-trends/blob/main/') }}">{{ run.meta.date }} delta (.md)</a>.{% endif %}</div>
 {% endblock %}
 {% block payload %}<script id="payload" type="application/json">{{ payload | safe }}</script>{% endblock %}
